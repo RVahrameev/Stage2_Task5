@@ -1,6 +1,7 @@
 package vtb.courses.stage2.Stage2_Task5.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +19,16 @@ public class CsiController {
     @PostMapping("corporate-settlement-instance/create/")
     private ResponseEntity<CsiResponse> createCsi(
             @RequestBody CreateCsiRequest csiRequest) {
-        System.out.println(csiRequest);
-        CsiResponse csiResponse = csiService.createCsi(csiRequest);
-        return ResponseEntity.status(csiResponse.getData().getResponseStatus()).body(csiResponse);
+        HttpStatus httpStatus = HttpStatus.OK;
+        CsiResponse csiResponse;
+        try {
+            csiResponse = csiService.createCsi(csiRequest);
+        } catch (Exception e) {
+            csiResponse = new CsiResponse();
+            csiResponse.setErrorMsg(e.getMessage());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return ResponseEntity.status(httpStatus).body(csiResponse);
     }
 
 }

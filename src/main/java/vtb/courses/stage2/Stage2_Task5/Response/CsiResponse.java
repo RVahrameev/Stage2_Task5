@@ -9,19 +9,16 @@ public class CsiResponse {
     @Getter
     @Setter
     private CsiData data = new CsiData();
+    @Getter
+    @Setter
+    private String errorMsg;
 
     public class CsiData {
-        @Setter
-        private HttpStatus httpStatus;
         @Getter
         @Setter
         private int instanceId;
         @Getter
         @Setter
         private int[] registerId;
-
-        public HttpStatus getResponseStatus() {
-            return httpStatus;
-        }
     }
 }
