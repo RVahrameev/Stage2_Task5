@@ -2,12 +2,14 @@ package vtb.courses.stage2.Stage2_Task5.Request;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
+@ToString
 public class CreateCsiRequest {
     @Getter @Setter
-    private int instanceId;
+    private Integer instanceId;
     @Getter @Setter
     private String productType;
     @Getter @Setter
@@ -21,31 +23,31 @@ public class CreateCsiRequest {
     @Getter @Setter
     private Date contractDate;
     @Getter @Setter
-    private int priority;
+    private Integer priority;
     @Getter @Setter
-    private double interestRatePenalty;
+    private Double interestRatePenalty;
     @Getter @Setter
-    private double minimalBalance;
+    private Double minimalBalance;
     @Getter @Setter
-    private double thresholdAmount;
+    private Double thresholdAmount;
     @Getter @Setter
     private String accountingDetails;
     @Getter @Setter
     private String rateType;
     @Getter @Setter
-    private double taxPercentageRate;
+    private Double taxPercentageRate;
     @Getter @Setter
-    private double technicalOverdraftLimitAmount;
+    private Double technicalOverdraftLimitAmount;
     @Getter @Setter
-    private int contractId;
+    private Integer contractId;
     @Getter @Setter
     private String BranchCode;
     @Getter @Setter
     private Agreement[] instanceAgreement;
 
-    class Agreement {
+    public class Agreement {
         @Getter @Setter
-        private int supplementaryAgreementId;
+        private Integer supplementaryAgreementId;
         @Getter @Setter
         private String number;
     }

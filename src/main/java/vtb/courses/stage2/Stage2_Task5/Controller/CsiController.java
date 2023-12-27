@@ -1,5 +1,11 @@
 package vtb.courses.stage2.Stage2_Task5.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.networknt.schema.*;
+import jakarta.persistence.NoResultException;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,24 +16,77 @@ import vtb.courses.stage2.Stage2_Task5.Request.CreateCsiRequest;
 import vtb.courses.stage2.Stage2_Task5.Response.CsiResponse;
 import vtb.courses.stage2.Stage2_Task5.Service.CsiService;
 
+import java.util.Locale;
+import java.util.Set;
+
 @RestController
 public class CsiController {
 
     @Autowired
     private CsiService csiService;
 
+    private <T> T validateAndParseJson(String jsonStr, String jsonSchemaFile, Class<T> objClass)
+            throws JsonProcessingException, IllegalArgumentException
+    {
+        // Вычитываем схему, которой должен соответствовать входящий json
+        SchemaValidatorsConfig config = new SchemaValidatorsConfig();
+        config.setLocale(new Locale("ru", "RU"));
+        JsonSchema jsonSchema =
+                JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
+                        .getSchema(
+                                ClassLoader.getSystemResourceAsStream(jsonSchemaFile),
+                                config
+                                );
+
+        // Поскольку мы решили валидировать json, то он к нам приходит неразборанным
+        // поэтому нам нужен маппер, который его переведёт в структуру нашего объекта
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE);
+        // Валидируем полученный json
+        Set<ValidationMessage> validateErorrs = jsonSchema.validate(objectMapper.readTree(jsonStr));
+        if (validateErorrs.isEmpty()) {
+            // Если входящий json прошёл проверку направляем создаем входящий объект и возвращаем его
+            return objectMapper.readValue(jsonStr, objClass);
+        } else {
+            // Найденные ошибки собираем и генерируем с ними исключение
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Ошибки разбора входящего json\n");
+            for (ValidationMessage error: validateErorrs) {
+                stringBuilder.append(error);
+                stringBuilder.append('\n');
+            }
+            throw new IllegalArgumentException(stringBuilder.toString());
+        }
+    }
+
     @PostMapping("corporate-settlement-instance/create/")
-    private ResponseEntity<CsiResponse> createCsi(
-            @RequestBody CreateCsiRequest csiRequest) {
-        HttpStatus httpStatus = HttpStatus.OK;
+    private ResponseEntity<CsiResponse> createCsi( @RequestBody String requestJsonStr) {
+
         CsiResponse csiResponse;
+        HttpStatus httpStatus;
+
         try {
+            CreateCsiRequest csiRequest = validateAndParseJson(requestJsonStr, "json-model/createCsiRequestJsonModel.json", CreateCsiRequest.class);
             csiResponse = csiService.createCsi(csiRequest);
-        } catch (Exception e) {
+            httpStatus = HttpStatus.OK;
+        }
+        catch (JsonProcessingException | IllegalArgumentException e) {
             csiResponse = new CsiResponse();
             csiResponse.setErrorMsg(e.getMessage());
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        catch (NoResultException e) {
+            csiResponse = new CsiResponse();
+            csiResponse.setErrorMsg(e.getMessage());
+            httpStatus = HttpStatus.NOT_FOUND;
+        }
+        catch (Exception e) {
+            csiResponse = new CsiResponse();
+            csiResponse.setErrorMsg(e.getMessage() +'\n'+ e.getStackTrace());
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
+
+        // Возвращаем ответ на поступивший запрос
         return ResponseEntity.status(httpStatus).body(csiResponse);
     }
 

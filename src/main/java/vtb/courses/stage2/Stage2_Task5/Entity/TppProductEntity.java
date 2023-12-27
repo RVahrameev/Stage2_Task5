@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,9 +14,9 @@ public class TppProductEntity {
     @Id
     @Column(name = "id")
     private int id;
-    @Basic
-    @Column(name = "parent_product_id")
-    private Integer parentProductId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "agreement_id")
+    private int agreementId;
     @Basic
     @Column(name = "product_code_id")
     private Integer productCodeId;
@@ -25,15 +26,6 @@ public class TppProductEntity {
     @Basic
     @Column(name = "type")
     private String type;
-    @Basic
-    @Column(name = "calculation_schedule_id")
-    private Integer calculationScheduleId;
-    @Basic
-    @Column(name = "calculation_accounting_schedule_id")
-    private Integer calculationAccountingScheduleId;
-    @Basic
-    @Column(name = "calculation_pay_schedule_id")
-    private Integer calculationPayScheduleId;
     @Basic
     @Column(name = "number")
     private String number;
@@ -83,6 +75,9 @@ public class TppProductEntity {
     @Column(name = "branch")
     private Integer branch;
 
+    @OneToMany @JoinColumn(name = "agreement_id", referencedColumnName = "agreement_id")
+    private List<AgreementsEntity> agreements;
+
     public int getId() {
         return id;
     }
@@ -91,12 +86,12 @@ public class TppProductEntity {
         this.id = id;
     }
 
-    public Integer getParentProductId() {
-        return parentProductId;
+    public int getAgreementId() {
+        return agreementId;
     }
 
-    public void setParentProductId(Integer parentProductId) {
-        this.parentProductId = parentProductId;
+    public void setAgreementId(int agreementId) {
+        this.agreementId = agreementId;
     }
 
     public Integer getProductCodeId() {
@@ -121,30 +116,6 @@ public class TppProductEntity {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Integer getCalculationScheduleId() {
-        return calculationScheduleId;
-    }
-
-    public void setCalculationScheduleId(Integer calculationScheduleId) {
-        this.calculationScheduleId = calculationScheduleId;
-    }
-
-    public Integer getCalculationAccountingScheduleId() {
-        return calculationAccountingScheduleId;
-    }
-
-    public void setCalculationAccountingScheduleId(Integer calculationAccountingScheduleId) {
-        this.calculationAccountingScheduleId = calculationAccountingScheduleId;
-    }
-
-    public Integer getCalculationPayScheduleId() {
-        return calculationPayScheduleId;
-    }
-
-    public void setCalculationPayScheduleId(Integer calculationPayScheduleId) {
-        this.calculationPayScheduleId = calculationPayScheduleId;
     }
 
     public String getNumber() {
@@ -280,11 +251,11 @@ public class TppProductEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TppProductEntity that = (TppProductEntity) o;
-        return id == that.id && Objects.equals(parentProductId, that.parentProductId) && Objects.equals(productCodeId, that.productCodeId) && Objects.equals(clientId, that.clientId) && Objects.equals(type, that.type) && Objects.equals(calculationScheduleId, that.calculationScheduleId) && Objects.equals(calculationAccountingScheduleId, that.calculationAccountingScheduleId) && Objects.equals(calculationPayScheduleId, that.calculationPayScheduleId) && Objects.equals(number, that.number) && Objects.equals(priority, that.priority) && Objects.equals(dateOfConclusion, that.dateOfConclusion) && Objects.equals(startDateTime, that.startDateTime) && Objects.equals(endDateTime, that.endDateTime) && Objects.equals(days, that.days) && Objects.equals(penaltyRate, that.penaltyRate) && Objects.equals(nso, that.nso) && Objects.equals(thresholdAmount, that.thresholdAmount) && Objects.equals(registerType, that.registerType) && Objects.equals(interestRateType, that.interestRateType) && Objects.equals(taxRate, that.taxRate) && Objects.equals(reasonClose, that.reasonClose) && Objects.equals(state, that.state) && Objects.equals(currency, that.currency) && Objects.equals(branch, that.branch);
+        return id == that.id && Objects.equals(productCodeId, that.productCodeId) && Objects.equals(clientId, that.clientId) && Objects.equals(type, that.type) && Objects.equals(number, that.number) && Objects.equals(priority, that.priority) && Objects.equals(dateOfConclusion, that.dateOfConclusion) && Objects.equals(startDateTime, that.startDateTime) && Objects.equals(endDateTime, that.endDateTime) && Objects.equals(days, that.days) && Objects.equals(penaltyRate, that.penaltyRate) && Objects.equals(nso, that.nso) && Objects.equals(thresholdAmount, that.thresholdAmount) && Objects.equals(registerType, that.registerType) && Objects.equals(interestRateType, that.interestRateType) && Objects.equals(taxRate, that.taxRate) && Objects.equals(reasonClose, that.reasonClose) && Objects.equals(state, that.state) && Objects.equals(currency, that.currency) && Objects.equals(branch, that.branch);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentProductId, productCodeId, clientId, type, calculationScheduleId, calculationAccountingScheduleId, calculationPayScheduleId, number, priority, dateOfConclusion, startDateTime, endDateTime, days, penaltyRate, nso, thresholdAmount, registerType, interestRateType, taxRate, reasonClose, state, currency, branch);
+        return Objects.hash(id, productCodeId, clientId, type, number, priority, dateOfConclusion, startDateTime, endDateTime, days, penaltyRate, nso, thresholdAmount, registerType, interestRateType, taxRate, reasonClose, state, currency, branch);
     }
 }

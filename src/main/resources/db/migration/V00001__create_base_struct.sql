@@ -24,8 +24,6 @@ create table tpp_ref_product_register_type (
     value varchar(30),
     register_type_name varchar(100),
     product_class_code varchar(30),
-    register_type_start_date date,
-    register_type_end_date date,
     account_type varchar(30)
 );
 alter table tpp_ref_product_register_type
@@ -62,13 +60,11 @@ create table tpp_branch (
 --======================================
 create table tpp_product (
     id serial primary key,
+    agreement_id serial,
     parent_product_id integer,
     product_code_id integer,
     client_id integer,
     type varchar(30),
-    calculation_schedule_id integer,
-    calculation_accounting_schedule_id integer,
-    calculation_pay_schedule_id integer,
     number varchar(30),
     priority smallint,
     date_of_conclusion date,
@@ -86,6 +82,7 @@ create table tpp_product (
     currency varchar(3),
     branch integer
 );
+create unique index idx_product_agreement_id on tpp_product(agreement_id);
 alter table tpp_product
     add constraint fk_parent_product
         foreign key (parent_product_id)
@@ -118,9 +115,8 @@ create table tpp_product_register(
     product_id integer,
     register_type integer,
     account_num varchar(25),
-    client integer,
     currency varchar(3),
-    branch integer
+    state varchar(200)
 );
 alter table tpp_product_register
     add constraint fk_register_product
@@ -131,27 +127,31 @@ alter table tpp_product_register
         foreign key (register_type)
             references tpp_ref_product_register_type (id);
 alter table tpp_product_register
-    add constraint fk_register_client_ref
-        foreign key (client)
-            references tpp_client (id);
-alter table tpp_product_register
     add constraint fk_register_currency
         foreign key (currency)
             references tpp_currency (code);
-alter table tpp_product_register
-    add constraint fk_register_branch
-        foreign key (branch)
-            references tpp_branch (id);
 
 --======================================
 create table agreements(
     id serial primary key,
-    product_id integer,
+    agreement_id integer,
     number varchar(30)
 );
 alter table agreements
     add constraint fk_product
-        foreign key (product_id)
-            references tpp_product (id);
+        foreign key (agreement_id)
+            references tpp_product (agreement_id);
 
 --======================================
+insert into tpp_ref_account_type (value) values ('Клиентский');
+insert into tpp_ref_account_type (value) values ('Внутрибанковский');
+
+insert into tpp_ref_product_class (value, gbl_code, gbl_name, product_row_code, product_row_name, subclass_code, subclass_name)
+values ('03.012.002', '03', 'Розничный бизнес', '012', 'Драг. металлы', '002', 'Хранение');
+insert into tpp_ref_product_class (value, gbl_code, gbl_name, product_row_code, product_row_name, subclass_code, subclass_name)
+values ('02.001.005', '02', 'Розничный бизнес', '001', 'Сырье', '005', 'Продажа');
+
+insert into tpp_ref_product_register_type (value, register_type_name, product_class_code, account_type)
+    values ('03.012.002_47533_ComSoLd', 'Хранение ДМ.', '03.012.002', 'Клиентский');
+insert into tpp_ref_product_register_type (value, register_type_name, product_class_code, account_type)
+    values ('02.001.005_45343_CoDowFF', 'Серебро. Выкуп.', '02.001.005', 'Клиентский');

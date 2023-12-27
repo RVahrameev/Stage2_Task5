@@ -12,8 +12,8 @@ public class AgreementsEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "product_id")
-    private Integer productId;
+    @Column(name = "agreement_id")
+    private Integer agreementId;
     @Basic
     @Column(name = "number")
     private String number;
@@ -26,12 +26,12 @@ public class AgreementsEntity {
         this.id = id;
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getAgreementId() {
+        return agreementId;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setAgreementId(Integer agreementId) {
+        this.agreementId = agreementId;
     }
 
     public String getNumber() {
@@ -47,11 +47,11 @@ public class AgreementsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AgreementsEntity that = (AgreementsEntity) o;
-        return id == that.id && Objects.equals(productId, that.productId) && Objects.equals(number, that.number);
+        return id == that.id && Objects.equals(agreementId, that.agreementId) && Objects.equals(number, that.number);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, number);
+        return Objects.hash(id, agreementId, number);
     }
 }
