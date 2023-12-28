@@ -6,7 +6,7 @@
       "type": "integer"
     },
     "productType": {
-      "type": "string"
+      "enum": ["НСО", "СМО", "ЕЖО", "ДБДС", "договор"]
     },
     "productCode": {
       "type": "string"
@@ -50,10 +50,10 @@
     "contractId": {
       "type": "integer"
     },
-    "BranchCode": {
+    "branchCode": {
       "type": "string"
     },
-    "IsoCurrencyCode": {
+    "isoCurrencyCode": {
       "type": "string"
     },
     "additionalPropertiesVip": {
@@ -110,7 +110,7 @@
     "contractDate",
     "priority",
     "contractId",
-    "BranchCode",
-    "IsoCurrencyCode"
+    "branchCode",
+    "isoCurrencyCode"
   ]
 }

@@ -41,14 +41,27 @@ public class CreateCsiRequest {
     @Getter @Setter
     private Integer contractId;
     @Getter @Setter
-    private String BranchCode;
+    private String isoCurrencyCode;
+    @Getter @Setter
+    private String branchCode;
     @Getter @Setter
     private Agreement[] instanceAgreement;
+    @Getter @Setter
+    private AdditionalPropertiesVip additionalPropertiesVip;
 
     public class Agreement {
         @Getter @Setter
         private Integer supplementaryAgreementId;
         @Getter @Setter
         private String number;
+    }
+
+    public class AdditionalPropertiesVip {
+        private Data[] data;
+    }
+    public class Data {
+        private String key;
+        private String value;
+        private String name;
     }
 }

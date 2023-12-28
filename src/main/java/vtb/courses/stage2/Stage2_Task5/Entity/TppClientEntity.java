@@ -2,6 +2,7 @@ package vtb.courses.stage2.Stage2_Task5.Entity;
 
 import jakarta.persistence.*;
 
+import java.io.StringBufferInputStream;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -16,11 +17,11 @@ public class TppClientEntity {
     @Column(name = "mdm_code")
     private String mdmCode;
     @Basic
-    @Column(name = "fio")
-    private String fio;
+    @Column(name = "name")
+    private String name;
     @Basic
-    @Column(name = "birthday")
-    private Date birthday;
+    @Column(name = "kpp")
+    private String kpp;
 
     public int getId() {
         return id;
@@ -39,19 +40,19 @@ public class TppClientEntity {
     }
 
     public String getFio() {
-        return fio;
+        return name;
     }
 
     public void setFio(String fio) {
-        this.fio = fio;
+        this.name = fio;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getBirthday() {
+        return kpp;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setBirthday(String kpp) {
+        this.kpp = kpp;
     }
 
     @Override
@@ -59,11 +60,11 @@ public class TppClientEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TppClientEntity that = (TppClientEntity) o;
-        return id == that.id && Objects.equals(mdmCode, that.mdmCode) && Objects.equals(fio, that.fio) && Objects.equals(birthday, that.birthday);
+        return id == that.id && Objects.equals(mdmCode, that.mdmCode) && Objects.equals(name, that.name) && Objects.equals(kpp, that.kpp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mdmCode, fio, birthday);
+        return Objects.hash(id, mdmCode, name, kpp);
     }
 }

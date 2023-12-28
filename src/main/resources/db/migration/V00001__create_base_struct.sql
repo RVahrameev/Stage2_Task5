@@ -39,8 +39,8 @@ alter table tpp_ref_product_register_type
 create table tpp_client (
     id serial primary key,
     mdm_code varchar(30),
-    fio varchar(200),
-    birthday date
+    name varchar(200),
+    kpp varchar(20)
 );
 create unique index idx_client_mdm_code on tpp_client(mdm_code);
 
@@ -66,7 +66,7 @@ create table tpp_product (
     client_id integer,
     type varchar(30),
     number varchar(30),
-    priority smallint,
+    priority integer,
     date_of_conclusion date,
     start_date_time date,
     end_date_time date,
@@ -74,7 +74,6 @@ create table tpp_product (
     penalty_rate decimal(7, 4),
     nso decimal(30, 10),
     threshold_amount decimal(30, 10),
-    register_type integer,
     interest_rate_type varchar(30),
     tax_rate decimal(7, 4),
     reason_close varchar(2000),
@@ -91,10 +90,6 @@ alter table tpp_product
     add constraint fk_product_product_class
         foreign key (product_code_id)
             references tpp_ref_product_class (id);
-alter table tpp_product
-    add constraint fk_product_register_type
-        foreign key (register_type)
-            references tpp_ref_product_register_type (id);
 alter table tpp_product
     add constraint fk_product_client_ref
         foreign key (client_id)
@@ -147,11 +142,23 @@ insert into tpp_ref_account_type (value) values ('Клиентский');
 insert into tpp_ref_account_type (value) values ('Внутрибанковский');
 
 insert into tpp_ref_product_class (value, gbl_code, gbl_name, product_row_code, product_row_name, subclass_code, subclass_name)
-values ('03.012.002', '03', 'Розничный бизнес', '012', 'Драг. металлы', '002', 'Хранение');
+    values ('03.012.002', '03', 'Розничный бизнес', '012', 'Драг. металлы', '002', 'Хранение');
 insert into tpp_ref_product_class (value, gbl_code, gbl_name, product_row_code, product_row_name, subclass_code, subclass_name)
-values ('02.001.005', '02', 'Розничный бизнес', '001', 'Сырье', '005', 'Продажа');
+    values ('02.001.005', '02', 'Розничный бизнес', '001', 'Сырье', '005', 'Продажа');
 
 insert into tpp_ref_product_register_type (value, register_type_name, product_class_code, account_type)
     values ('03.012.002_47533_ComSoLd', 'Хранение ДМ.', '03.012.002', 'Клиентский');
 insert into tpp_ref_product_register_type (value, register_type_name, product_class_code, account_type)
     values ('02.001.005_45343_CoDowFF', 'Серебро. Выкуп.', '02.001.005', 'Клиентский');
+
+insert into tpp_client (mdm_code, name, kpp)
+    values ('cl001','"ООО" Бабкоруб', '15130417');
+
+insert into tpp_branch (code, name)
+    values ('001', 'Головной филиал в г.Москва');
+
+insert into tpp_currency (code, name) values ('A98', 'Золото');
+insert into tpp_currency (code, name) values ('RUB', 'Рубль');
+insert into tpp_currency (code, name) values ('USD', 'Доллар');
+insert into tpp_currency (code, name) values ('EUR', 'Евро');
+insert into tpp_currency (code, name) values ('CYN', 'Юань');
