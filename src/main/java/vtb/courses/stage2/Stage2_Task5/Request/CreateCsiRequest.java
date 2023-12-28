@@ -1,6 +1,7 @@
 package vtb.courses.stage2.Stage2_Task5.Request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -49,19 +50,27 @@ public class CreateCsiRequest {
     @Getter @Setter
     private AdditionalPropertiesVip additionalPropertiesVip;
 
-    public class Agreement {
+    @NoArgsConstructor
+    public static class Agreement {
         @Getter @Setter
         private Integer supplementaryAgreementId;
         @Getter @Setter
         private String number;
     }
 
+    @NoArgsConstructor
     public class AdditionalPropertiesVip {
+        @Getter @Setter
         private Data[] data;
     }
-    public class Data {
+
+    @NoArgsConstructor
+    public static class Data {
+        @Getter @Setter
         private String key;
+        @Getter @Setter
         private String value;
+        @Getter @Setter
         private String name;
     }
 }

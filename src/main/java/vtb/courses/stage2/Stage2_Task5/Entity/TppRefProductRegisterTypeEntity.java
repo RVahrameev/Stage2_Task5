@@ -22,12 +22,6 @@ public class TppRefProductRegisterTypeEntity {
     @Column(name = "product_class_code")
     private String productClassCode;
     @Basic
-    @Column(name = "register_type_start_date")
-    private Date registerTypeStartDate;
-    @Basic
-    @Column(name = "register_type_end_date")
-    private Date registerTypeEndDate;
-    @Basic
     @Column(name = "account_type")
     private String accountType;
 
@@ -63,22 +57,6 @@ public class TppRefProductRegisterTypeEntity {
         this.productClassCode = productClassCode;
     }
 
-    public Date getRegisterTypeStartDate() {
-        return registerTypeStartDate;
-    }
-
-    public void setRegisterTypeStartDate(Date registerTypeStartDate) {
-        this.registerTypeStartDate = registerTypeStartDate;
-    }
-
-    public Date getRegisterTypeEndDate() {
-        return registerTypeEndDate;
-    }
-
-    public void setRegisterTypeEndDate(Date registerTypeEndDate) {
-        this.registerTypeEndDate = registerTypeEndDate;
-    }
-
     public String getAccountType() {
         return accountType;
     }
@@ -92,11 +70,11 @@ public class TppRefProductRegisterTypeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TppRefProductRegisterTypeEntity that = (TppRefProductRegisterTypeEntity) o;
-        return id == that.id && Objects.equals(value, that.value) && Objects.equals(registerTypeName, that.registerTypeName) && Objects.equals(productClassCode, that.productClassCode) && Objects.equals(registerTypeStartDate, that.registerTypeStartDate) && Objects.equals(registerTypeEndDate, that.registerTypeEndDate) && Objects.equals(accountType, that.accountType);
+        return id == that.id && Objects.equals(value, that.value) && Objects.equals(registerTypeName, that.registerTypeName) && Objects.equals(productClassCode, that.productClassCode)  && Objects.equals(accountType, that.accountType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, value, registerTypeName, productClassCode, registerTypeStartDate, registerTypeEndDate, accountType);
+        return Objects.hash(id, value, registerTypeName, productClassCode, accountType);
     }
 }

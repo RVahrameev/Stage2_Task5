@@ -108,6 +108,8 @@ public class TppProductEntity {
 
         // Ищем класс продукта в справочнике. Он 100% должен найтись, т.к. ранее мы искали по этому коду экземпляр TppRefProductRegisterTypeEntity
         productCodeId = productClassRepo.getByValue(csiRequest.getProductCode());
+
+        // Заполняем остальные поля
         clientId = clientRepo.getByMdmCode(csiRequest.getMdmCode());
         type = ProductType.valueOf(csiRequest.getProductType());
         number = csiRequest.getContractNumber();
