@@ -59,7 +59,7 @@ public class CreateCsiRequest {
     }
 
     @NoArgsConstructor
-    public class AdditionalPropertiesVip {
+    public static class AdditionalPropertiesVip {
         @Getter @Setter
         private Data[] data;
     }

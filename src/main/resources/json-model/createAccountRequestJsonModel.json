@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "instanceId": {
+      "type": "integer"
+    },
+    "registryTypeCode": {
+      "type": "string"
+    },
+    "accountType": {
+      "type": "string"
+    },
+    "currencyCode": {
+      "type": "string"
+    },
+    "branchCode": {
+      "type": "string"
+    },
+    "priorityCode": {
+      "type": "string"
+    },
+    "mdmCode": {
+      "type": "string"
+    },
+    "clientCode": {
+      "type": "string"
+    },
+    "trainRegion": {
+      "type": "string"
+    },
+    "counter": {
+      "type": "string"
+    },
+    "salesCode": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "required": [
+    "instanceId",
+    "registryTypeCode"
+  ]
+}

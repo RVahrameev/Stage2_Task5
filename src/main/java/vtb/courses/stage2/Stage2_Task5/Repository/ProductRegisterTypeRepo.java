@@ -9,4 +9,8 @@ public interface ProductRegisterTypeRepo extends JpaRepository<TppRefProductRegi
     boolean existsByProductClassCodeAndAccountType(String productClassCode, String accountType);
 
     List<TppRefProductRegisterTypeEntity> findAllByProductClassCodeAndAccountType(String productClassCode, String accountType);
+
+    List<TppRefProductRegisterTypeEntity> findAllByProductClassCodeAndValue(String productClassCode, String registerTypeCode);
+
+    Integer getByValue(String typeCode);
 }

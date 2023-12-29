@@ -26,6 +26,7 @@ create table tpp_ref_product_register_type (
     product_class_code varchar(30),
     account_type varchar(30)
 );
+create unique index idx_register_type_value on tpp_ref_product_register_type(value);
 alter table tpp_ref_product_register_type
     add constraint fk_register_type_account_type
         foreign key (account_type)
@@ -56,6 +57,7 @@ create table tpp_branch (
     code varchar(5),
     name varchar(100)
 );
+create unique index idx_branch_code on tpp_branch(code);
 
 --======================================
 create table tpp_product (
@@ -138,6 +140,46 @@ alter table agreements
             references tpp_product (agreement_id);
 
 --======================================
+create table account_pool(
+    id serial primary key,
+    branch_code varchar(5),
+    currency_code varchar(3),
+    mdm_code varchar(30),
+    priority_code varchar(2),
+    register_type_code varchar(30),
+    account_coll serial
+);
+create unique index idx_account_coll on account_pool(account_coll);
+alter table account_pool
+    add constraint fk_branch_code
+        foreign key (branch_code)
+            references tpp_branch (code);
+alter table account_pool
+    add constraint fk_currency_code
+        foreign key (currency_code)
+            references tpp_currency (code);
+alter table account_pool
+    add constraint fk_mdm_code
+        foreign key (mdm_code)
+            references tpp_client (mdm_code);
+alter table account_pool
+    add constraint fk_register_type_code
+        foreign key (register_type_code)
+            references tpp_ref_product_register_type (value);
+
+--======================================
+create table account(
+    account_coll integer,
+    account varchar(25)
+);
+alter table account
+    add constraint fk_account_collection
+        foreign key (account_coll)
+            references account_pool (account_coll);
+
+
+--======================================
+--======================================
 insert into tpp_ref_account_type (value) values ('Клиентский');
 insert into tpp_ref_account_type (value) values ('Внутрибанковский');
 
@@ -157,8 +199,32 @@ insert into tpp_client (mdm_code, name, kpp)
 insert into tpp_branch (code, name)
     values ('001', 'Головной филиал в г.Москва');
 
-insert into tpp_currency (code, name) values ('A98', 'Золото');
-insert into tpp_currency (code, name) values ('RUB', 'Рубль');
-insert into tpp_currency (code, name) values ('USD', 'Доллар');
-insert into tpp_currency (code, name) values ('EUR', 'Евро');
-insert into tpp_currency (code, name) values ('CYN', 'Юань');
+insert into tpp_currency (code, name) values
+    ('A98', 'Золото'),
+    ('RUB', 'Рубль'),
+    ('USD', 'Доллар'),
+    ('EUR', 'Евро'),
+    ('CYN', 'Юань');
+
+DO $$
+declare
+    coll integer;
+begin
+    insert into account_pool (branch_code, currency_code, mdm_code, priority_code, register_type_code)
+        values ('001', 'A98', 'cl001', '00', '03.012.002_47533_ComSoLd')
+        returning account_coll
+        into coll;
+    insert into account (account_coll, account) values
+        (coll, '475335516415314841861'),
+        (coll, '4753321651354151'),
+        (coll, '4753352543276345');
+    insert into account_pool (branch_code, currency_code, mdm_code, priority_code, register_type_code)
+        values ('001', 'A98', 'cl001', '00', '02.001.005_45343_CoDowFF')
+        returning account_coll
+        into coll;
+    insert into account (account_coll, account) values
+         (coll, '453432352436453276'),
+         (coll, '45343221651354151'),
+         (coll, '4534352543276345');
+end;
+$$;

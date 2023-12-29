@@ -5,16 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.networknt.schema.*;
 import jakarta.persistence.NoResultException;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import vtb.courses.stage2.Stage2_Task5.Request.CreateAccountRequest;
 import vtb.courses.stage2.Stage2_Task5.Request.CreateCsiRequest;
+import vtb.courses.stage2.Stage2_Task5.Response.CreateAccountResponse;
 import vtb.courses.stage2.Stage2_Task5.Response.CsiResponse;
 import vtb.courses.stage2.Stage2_Task5.Service.CsiService;
+import vtb.courses.stage2.Stage2_Task5.Service.CreateAccountService;
 
 import java.util.Locale;
 import java.util.Set;
@@ -22,8 +24,8 @@ import java.util.Set;
 @RestController
 public class CsiController {
 
-    @Autowired
     private CsiService csiService;
+    private CreateAccountService accountService;
 
     private <T> T validateAndParseJson(String jsonStr, String jsonSchemaFile, Class<T> objClass)
             throws JsonProcessingException, IllegalArgumentException
@@ -90,4 +92,43 @@ public class CsiController {
         return ResponseEntity.status(httpStatus).body(csiResponse);
     }
 
+    @PostMapping("corporate-settlement-account/create/")
+    private ResponseEntity<CreateAccountResponse> createAccount(@RequestBody String requestJsonStr) {
+        CreateAccountResponse accountResponse;
+        HttpStatus httpStatus;
+        try {
+            CreateAccountRequest accountRequest = validateAndParseJson(requestJsonStr, "json-model/createAccountRequestJsonModel.json", CreateAccountRequest.class);
+            accountResponse = accountService.createAccount(accountRequest);
+            httpStatus = HttpStatus.OK;
+        }
+        catch (JsonProcessingException | IllegalArgumentException e) {
+            accountResponse = new CreateAccountResponse();
+            accountResponse.setErrorMsg(e.getMessage());
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+        catch (NoResultException e) {
+            accountResponse = new CreateAccountResponse();
+            accountResponse.setErrorMsg(e.getMessage());
+            httpStatus = HttpStatus.NOT_FOUND;
+        }
+        catch (Exception e) {
+            accountResponse = new CreateAccountResponse();
+            accountResponse.setErrorMsg(e.getMessage() +'\n'+ e.getStackTrace());
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        // Возвращаем ответ на поступивший запрос
+        return ResponseEntity.status(httpStatus).body(accountResponse);
+
+    }
+
+    @Autowired
+    public void setCsiService(CsiService csiService) {
+        this.csiService = csiService;
+    }
+
+    @Autowired
+    public void setAccountService(CreateAccountService accountService) {
+        this.accountService = accountService;
+    }
 }
