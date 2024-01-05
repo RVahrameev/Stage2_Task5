@@ -113,7 +113,7 @@ create table tpp_product_register(
     register_type integer,
     account_num varchar(25),
     currency varchar(3),
-    state varchar(200)
+    state varchar(10)
 );
 alter table tpp_product_register
     add constraint fk_register_product

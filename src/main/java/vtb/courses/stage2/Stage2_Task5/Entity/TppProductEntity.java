@@ -78,16 +78,45 @@ public class TppProductEntity {
 
         Integer productId = csiRequest.getInstanceId();
 
-        // Проверяем корректность переданного значения в поле ProductCode
-        List<TppRefProductRegisterTypeEntity> registerTypes = registerTypeRepo.findAllByProductClassCodeAndAccountType(csiRequest.getProductCode(), "Клиентский");
-        if (registerTypes.isEmpty()) {
-            throw new NoResultException("КодПродукта =\""+csiRequest.getProductCode()+"\" не найден в Каталоге продуктов (tpp_ref_product_register_type)");
-        }
-
         if (productId == null) {
+
+            // Проверяем корректность переданного значения в поле ProductCode
+            List<TppRefProductRegisterTypeEntity> registerTypes = registerTypeRepo.findAllByProductClassCodeAndAccountType(csiRequest.getProductCode(), "Клиентский");
+            if (registerTypes.isEmpty()) {
+                throw new NoResultException("КодПродукта =\""+csiRequest.getProductCode()+"\" не найден в Каталоге продуктов (tpp_ref_product_register_type)");
+            }
+
             // Проверяем что нет договора с таким же номером
             if (productRepo.existsByNumber(csiRequest.getContractNumber())) {
                 throw new IllegalArgumentException("Параметр ContractNumber \"№ договора\" "+csiRequest.getContractNumber()+" уже существует для \n ЭП с ИД "+productId);
+            }
+
+            // Ищем класс продукта в справочнике. Он 100% должен найтись, т.к. ранее мы искали по этому коду экземпляр TppRefProductRegisterTypeEntity
+            productCodeId = productClassRepo.getByValue(csiRequest.getProductCode());
+
+            // Заполняем остальные поля
+            clientId = clientRepo.getByMdmCode(csiRequest.getMdmCode());
+            type = ProductType.valueOf(csiRequest.getProductType());
+            number = csiRequest.getContractNumber();
+            priority = csiRequest.getPriority();
+            dateOfConclusion = csiRequest.getContractDate();
+            startDateTime = new Date();
+            endDateTime = null;
+            days = 0;
+            penaltyRate = BigDecimal.valueOf(csiRequest.getInterestRatePenalty());
+            nso = BigDecimal.valueOf(csiRequest.getMinimalBalance());
+            thresholdAmount = BigDecimal.valueOf(csiRequest.getThresholdAmount());
+            interestRateType = csiRequest.getRateType();
+            taxRate = BigDecimal.valueOf(csiRequest.getTaxPercentageRate());
+            reasonClose = null;
+            state = "OPEN";
+            currency = csiRequest.getIsoCurrencyCode();
+            branch = branchRepo.getByCode(csiRequest.getBranchCode());
+
+            // Создаём ПР
+            for (TppRefProductRegisterTypeEntity registerType: registerTypes) {
+                TppProductRegisterEntity prEntity = new TppProductRegisterEntity(this, registerType, currency, csiRequest.getBranchCode(), csiRequest.getMdmCode());
+                registerRepo.save(prEntity);
             }
 
         } else {
@@ -105,28 +134,6 @@ public class TppProductEntity {
 
             }
         }
-
-        // Ищем класс продукта в справочнике. Он 100% должен найтись, т.к. ранее мы искали по этому коду экземпляр TppRefProductRegisterTypeEntity
-        productCodeId = productClassRepo.getByValue(csiRequest.getProductCode());
-
-        // Заполняем остальные поля
-        clientId = clientRepo.getByMdmCode(csiRequest.getMdmCode());
-        type = ProductType.valueOf(csiRequest.getProductType());
-        number = csiRequest.getContractNumber();
-        priority = csiRequest.getPriority();
-        dateOfConclusion = csiRequest.getContractDate();
-        startDateTime = new Date();
-        endDateTime = null;
-        days = 0;
-        penaltyRate = BigDecimal.valueOf(csiRequest.getInterestRatePenalty());
-        nso = BigDecimal.valueOf(csiRequest.getMinimalBalance());
-        thresholdAmount = BigDecimal.valueOf(csiRequest.getThresholdAmount());
-        interestRateType = csiRequest.getRateType();
-        taxRate = BigDecimal.valueOf(csiRequest.getTaxPercentageRate());
-        reasonClose = null;
-        state = "OPEN";
-        currency = csiRequest.getIsoCurrencyCode();
-        branch = branchRepo.getByCode(csiRequest.getBranchCode());
 
     }
 

@@ -31,11 +31,8 @@ public class TppProductRegisterEntity {
     private String currency;
     @Basic
     @Column(name = "state")
-    private String state;
+    private AccountState state;
 
-    private static ProductRegisterRepo registerRepo;
-    private static ProductRegisterTypeRepo registerTypeRepo;
-    private static ProductRepo productRepo;
     private static AccountPoolRepo accountPoolRepo;
 
     public Integer getId() {
@@ -78,11 +75,11 @@ public class TppProductRegisterEntity {
         this.currency = currency;
     }
 
-    public String getState() {
+    public AccountState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(AccountState state) {
         this.state = state;
     }
 
@@ -102,26 +99,14 @@ public class TppProductRegisterEntity {
     public TppProductRegisterEntity() {
     }
 
-    public TppProductRegisterEntity(CreateAccountRequest accountRequest) {
-        productId = productRepo.getReferenceById(accountRequest.getInstanceId());
-        if (productId == null) {
-            throw new NoResultException("По instanceId \"Идентификатор ЭП\" <"+accountRequest.getInstanceId()+"> не найден экземпляр продукта.");
-        }
-        // Проверяем на дубли
-        if (registerRepo.existsByProductIdAndRegisterType(accountRequest.getInstanceId(), registerTypeRepo.getByValue(accountRequest.getRegistryTypeCode()))) {
-            throw new IllegalArgumentException("Параметр registryTypeCode \"Тип регистра\" <"+accountRequest.getRegistryTypeCode()+"> уже существует для ЭП с ИД <"+accountRequest.getInstanceId()+">.");
-        }
-
-        List<TppRefProductRegisterTypeEntity> registerTypes = registerTypeRepo.findAllByProductClassCodeAndValue(productId.getProductCodeId().getValue(), accountRequest.getRegistryTypeCode());
-        if (registerTypes.isEmpty()) {
-            throw new NoResultException("КодПродукта <"+productId.getProductCodeId().getValue()+"> не найдено в Каталоге продуктов для данного типа Регистра \""+accountRequest.getRegistryTypeCode()+"\"");
-        }
-
+    public TppProductRegisterEntity(TppProductEntity productId, TppRefProductRegisterTypeEntity registerType, String currency, String branchCode, String mdmCode) {
+        this.productId = productId;
+        this.registerType = registerType;
         AccountPoolEntity accountPool = accountPoolRepo.getByBranchCodeAndCurrencyCodeAndMdmCodeAndRegisterTypeCode(
-                accountRequest.getBranchCode(),
-                accountRequest.getCurrencyCode(),
-                accountRequest.getMdmCode(),
-                accountRequest.getRegistryTypeCode()
+                branchCode,
+                currency,
+                mdmCode,
+                registerType.getValue()
         );
 
         if (accountPool.getAccounts().isEmpty()) {
@@ -129,26 +114,14 @@ public class TppProductRegisterEntity {
         }
 
         // Заполняем поля
-        accountNum = accountPool.getAccounts().get(0);
-        currency = accountRequest.getCurrencyCode();
-        state = "OPEN";
+        this.accountNum = accountPool.getAccounts().get(0);
+        this.currency = currency;
+        this.state = AccountState.OPEN;
 
         // Удаляем счёт из пула
         accountPool.getAccounts().remove(0);
     }
 
-    @Autowired
-    public static void setRegisterRepo(ProductRegisterRepo registerRepo) {
-        TppProductRegisterEntity.registerRepo = registerRepo;
-    }
-    @Autowired
-    public static void setRegisterTypeRepo(ProductRegisterTypeRepo registerTypeRepo) {
-        TppProductRegisterEntity.registerTypeRepo = registerTypeRepo;
-    }
-    @Autowired
-    public static void setProductRepo(ProductRepo productRepo) {
-        TppProductRegisterEntity.productRepo = productRepo;
-    }
     @Autowired
     public static void setAccountPoolRepo(AccountPoolRepo accountPoolRepo) {
         TppProductRegisterEntity.accountPoolRepo = accountPoolRepo;

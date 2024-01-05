@@ -12,5 +12,5 @@ public interface ProductRegisterTypeRepo extends JpaRepository<TppRefProductRegi
 
     List<TppRefProductRegisterTypeEntity> findAllByProductClassCodeAndValue(String productClassCode, String registerTypeCode);
 
-    Integer getByValue(String typeCode);
+    TppRefProductRegisterTypeEntity getByValue(String typeCode);
 }
