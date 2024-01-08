@@ -3,10 +3,14 @@
   "type": "object",
   "properties": {
     "instanceId": {
-      "type": "integer"
+      "anyOf": [
+        {"type": "null"},
+        {"type": "integer"}
+      ]
     },
     "productType": {
-      "enum": ["НСО", "СМО", "ЕЖО", "ДБДС", "договор"]
+      "type": "string",
+      "enum": ["НСО", "СМО", "ЕЖО", "ДБДС", "договор", "TEST"]
     },
     "productCode": {
       "type": "string"
@@ -80,12 +84,12 @@
       },
       "additionalProperties": true
     },
-    "instanceArrangement": {
+    "instanceAgreement": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "SupplementaryAgreementId": {
+          "supplementaryAgreementId": {
             "type": "integer"
           },
           "number": {
@@ -94,7 +98,7 @@
         },
         "additionalProperties": true,
         "required": [
-          "SupplementaryAgreementId",
+          "supplementaryAgreementId",
           "number"
         ]
       }
