@@ -1,6 +1,8 @@
 package vtb.courses.stage2_task5.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -8,94 +10,37 @@ import java.util.Objects;
 @Table(name = "tpp_ref_product_class", schema = "public", catalog = "postgres")
 public class TppRefProductClassEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    @Id @Getter @Setter
     @Column(name = "id")
     private int id;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "value")
     private String value;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "gbl_code")
     private String gblCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "gbl_name")
     private String gblName;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "product_row_code")
     private String productRowCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "product_row_name")
     private String productRowName;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "subclass_code")
     private String subclassCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "subclass_name")
     private String subclassName;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getGblCode() {
-        return gblCode;
-    }
-
-    public void setGblCode(String gblCode) {
-        this.gblCode = gblCode;
-    }
-
-    public String getGblName() {
-        return gblName;
-    }
-
-    public void setGblName(String gblName) {
-        this.gblName = gblName;
-    }
-
-    public String getProductRowCode() {
-        return productRowCode;
-    }
-
-    public void setProductRowCode(String productRowCode) {
-        this.productRowCode = productRowCode;
-    }
-
-    public String getProductRowName() {
-        return productRowName;
-    }
-
-    public void setProductRowName(String productRowName) {
-        this.productRowName = productRowName;
-    }
-
-    public String getSubclassCode() {
-        return subclassCode;
-    }
-
-    public void setSubclassCode(String subclassCode) {
-        this.subclassCode = subclassCode;
-    }
-
-    public String getSubclassName() {
-        return subclassName;
-    }
-
-    public void setSubclassName(String subclassName) {
-        this.subclassName = subclassName;
-    }
 
     @Override
     public boolean equals(Object o) {

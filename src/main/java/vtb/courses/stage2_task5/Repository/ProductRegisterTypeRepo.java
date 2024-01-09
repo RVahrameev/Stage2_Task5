@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRegisterTypeRepo extends JpaRepository<TppRefProductRegisterTypeEntity, Integer> {
-    boolean existsByProductClassCodeAndAccountType(String productClassCode, String accountType);
 
     List<TppRefProductRegisterTypeEntity> findAllByProductClassCodeAndAccountType(String productClassCode, String accountType);
 

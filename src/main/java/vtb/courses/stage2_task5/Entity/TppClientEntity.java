@@ -1,6 +1,8 @@
 package vtb.courses.stage2_task5.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -8,50 +10,21 @@ import java.util.Objects;
 @Table(name = "tpp_client", schema = "public", catalog = "postgres")
 public class TppClientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    @Id @Getter @Setter
     @Column(name = "id")
     private int id;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "mdm_code")
     private String mdmCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "name")
     private String name;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "kpp")
     private String kpp;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMdmCode() {
-        return mdmCode;
-    }
-
-    public void setMdmCode(String mdmCode) {
-        this.mdmCode = mdmCode;
-    }
-
-    public String getFio() {
-        return name;
-    }
-
-    public void setFio(String fio) {
-        this.name = fio;
-    }
-
-    public String getBirthday() {
-        return kpp;
-    }
-
-    public void setBirthday(String kpp) {
-        this.kpp = kpp;
-    }
 
     @Override
     public boolean equals(Object o) {

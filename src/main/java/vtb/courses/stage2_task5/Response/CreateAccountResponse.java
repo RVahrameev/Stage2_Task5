@@ -7,7 +7,7 @@ public class CreateAccountResponse {
 
     @Getter
     @Setter
-    private CsiData data;// = new CsiData();
+    private CsiData data = new CsiData();
     @Getter
     @Setter
     private String errorMsg;

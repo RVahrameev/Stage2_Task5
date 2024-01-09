@@ -1,6 +1,8 @@
 package vtb.courses.stage2_task5.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,73 +15,31 @@ public class AccountPoolEntity {
     @Id
     @Column(name = "id")
     private Integer id;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "branch_code")
     private String branchCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "currency_code")
     private String currencyCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "mdm_code")
     private String mdmCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "priority_code")
     private String priorityCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "register_type_code")
     private String registerTypeCode;
-    @ElementCollection
+
+    @ElementCollection @Getter @Setter
     @CollectionTable(name = "account", joinColumns = @JoinColumn(name = "account_coll"))
     @Column(name = "account")
     private List<String> accounts = new ArrayList<>();
-
-    public String getBranchCode() {
-        return branchCode;
-    }
-
-    public void setBranchCode(String branchCode) {
-        this.branchCode = branchCode;
-    }
-
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
-    }
-
-    public String getMdmCode() {
-        return mdmCode;
-    }
-
-    public void setMdmCode(String mdmCode) {
-        this.mdmCode = mdmCode;
-    }
-
-    public String getPriorityCode() {
-        return priorityCode;
-    }
-
-    public void setPriorityCode(String priorityCode) {
-        this.priorityCode = priorityCode;
-    }
-
-    public String getRegisterTypeCode() {
-        return registerTypeCode;
-    }
-
-    public void setRegisterTypeCode(String registerTypeCode) {
-        this.registerTypeCode = registerTypeCode;
-    }
-
-    public List<String> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<String> accounts) {
-        this.accounts = accounts;
-    }
 
     @Override
     public boolean equals(Object o) {

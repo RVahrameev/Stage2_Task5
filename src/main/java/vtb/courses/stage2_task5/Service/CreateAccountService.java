@@ -1,15 +1,13 @@
 package vtb.courses.stage2_task5.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vtb.courses.stage2_task5.Entity.AccountPoolEntity;
 import vtb.courses.stage2_task5.Entity.TppProductEntity;
 import vtb.courses.stage2_task5.Entity.TppProductRegisterEntity;
 import vtb.courses.stage2_task5.Entity.TppRefProductRegisterTypeEntity;
-import vtb.courses.stage2_task5.Repository.AccountPoolRepo;
 import vtb.courses.stage2_task5.Repository.ProductRegisterTypeRepo;
 import vtb.courses.stage2_task5.Repository.ProductRepo;
 import vtb.courses.stage2_task5.Request.CreateAccountRequest;
@@ -29,11 +27,13 @@ public class CreateAccountService {
 
     @Transactional
     public CreateAccountResponse createAccount(CreateAccountRequest accountRequest){
+        TppProductEntity productId;
         CreateAccountResponse accountResponse = new CreateAccountResponse();
 
         // Ищем экземпляр продукта по переданному Id
-        TppProductEntity productId = productRepo.getReferenceById(accountRequest.getInstanceId());
-        if (productId == null) {
+        try {
+            productId = productRepo.getReferenceById(accountRequest.getInstanceId());
+        } catch (EntityNotFoundException e) {
             throw new NoResultException("По instanceId \"Идентификатор ЭП\" <"+accountRequest.getInstanceId()+"> не найден экземпляр продукта.");
         }
         // Проверяем на дубли
@@ -57,13 +57,13 @@ public class CreateAccountService {
         );
 
         // Создаём ПР
-        TppProductRegisterEntity accountEntity = new TppProductRegisterEntity(productId, registerTypeEntity, accountNum, accountRequest.getCurrencyCode(), accountRequest.getBranchCode(), accountRequest.getMdmCode());
+        TppProductRegisterEntity accountEntity = new TppProductRegisterEntity(productId, registerTypeEntity, accountNum, accountRequest.getCurrencyCode());
 
         registerRepo.save(accountEntity);
 
         accountResponse.getData().setAccountId (accountEntity.getId().toString());
         return accountResponse;
-    };
+    }
 
     @Autowired
     public void setRegistryTypeRepo(ProductRegisterRepo registerRepo) {

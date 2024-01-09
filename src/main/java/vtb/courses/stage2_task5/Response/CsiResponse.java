@@ -2,7 +2,8 @@ package vtb.courses.stage2_task5.Response;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CsiResponse {
 
@@ -19,6 +20,9 @@ public class CsiResponse {
         private int instanceId;
         @Getter
         @Setter
-        private int[] registerId;
+        private List<Integer> registerId = new ArrayList<>();
+        @Getter
+        @Setter
+        private List<Integer> supplementaryAgreementId = new ArrayList<>();
     }
 }

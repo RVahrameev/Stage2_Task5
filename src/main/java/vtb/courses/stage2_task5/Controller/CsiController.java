@@ -18,6 +18,8 @@ import vtb.courses.stage2_task5.Response.CsiResponse;
 import vtb.courses.stage2_task5.Service.CsiService;
 import vtb.courses.stage2_task5.Service.CreateAccountService;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Locale;
 import java.util.Set;
 
@@ -85,7 +87,9 @@ public class CsiController {
         }
         catch (Exception e) {
             csiResponse = new CsiResponse();
-            csiResponse.setErrorMsg(e.getMessage() +'\n'+ e.getStackTrace());
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            csiResponse.setErrorMsg(e.getMessage() +'\n'+ sw);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
@@ -114,7 +118,9 @@ public class CsiController {
         }
         catch (Exception e) {
             accountResponse = new CreateAccountResponse();
-            accountResponse.setErrorMsg(e.getMessage() +'\n'+ e.getStackTrace());
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            accountResponse.setErrorMsg(e.getMessage() +'\n'+ sw);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 

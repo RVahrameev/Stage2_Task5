@@ -1,6 +1,8 @@
 package vtb.courses.stage2_task5.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -8,61 +10,25 @@ import java.util.Objects;
 @Table(name = "tpp_ref_product_register_type", schema = "public", catalog = "postgres")
 public class TppRefProductRegisterTypeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+    @Id @Getter @Setter
     @Column(name = "id")
     private int id;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "value")
     private String value;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "register_type_name")
     private String registerTypeName;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "product_class_code")
     private String productClassCode;
-    @Basic
+
+    @Basic @Getter @Setter
     @Column(name = "account_type")
     private String accountType;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getRegisterTypeName() {
-        return registerTypeName;
-    }
-
-    public void setRegisterTypeName(String registerTypeName) {
-        this.registerTypeName = registerTypeName;
-    }
-
-    public String getProductClassCode() {
-        return productClassCode;
-    }
-
-    public void setProductClassCode(String productClassCode) {
-        this.productClassCode = productClassCode;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
 
     @Override
     public boolean equals(Object o) {

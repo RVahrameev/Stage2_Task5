@@ -11,6 +11,8 @@ import vtb.courses.stage2_task5.Entity.TppRefProductRegisterTypeEntity;
 import vtb.courses.stage2_task5.Repository.*;
 import vtb.courses.stage2_task5.Request.CreateCsiRequest;
 import vtb.courses.stage2_task5.Response.CsiResponse;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +28,7 @@ public class CsiService {
     @Transactional
     public CsiResponse createCsi(CreateCsiRequest csiRequest){
         CsiResponse csiResponse = new CsiResponse();
-
-        TppProductEntity productEntity;// = new TppProductEntity(csiRequest);
-
+        TppProductEntity productEntity;
         Integer productId = csiRequest.getInstanceId();
 
         if (productId == null) {
@@ -46,14 +46,16 @@ public class CsiService {
             }
 
             // Создаем ЭП
-            productEntity = new TppProductEntity(csiRequest, registerTypes);
+            productEntity = new TppProductEntity(csiRequest);
 
             // Создаём связанные ПР
             for (TppRefProductRegisterTypeEntity registerType: registerTypes) {
                 // Получаем номер счёта
                 String accountNum = accountNumService.getAccountNum(csiRequest.getBranchCode(), csiRequest.getIsoCurrencyCode(), csiRequest.getMdmCode(), registerType);
-                TppProductRegisterEntity prEntity = new TppProductRegisterEntity(productEntity, registerType, accountNum, csiRequest.getIsoCurrencyCode(), csiRequest.getBranchCode(), csiRequest.getMdmCode());
+                TppProductRegisterEntity prEntity = new TppProductRegisterEntity(productEntity, registerType, accountNum, csiRequest.getIsoCurrencyCode());
                 registerRepo.save(prEntity);
+                // Созданные счета добавляем в ответ
+                csiResponse.getData().getRegisterId().add(prEntity.getId());
             }
 
         } else {
@@ -69,22 +71,26 @@ public class CsiService {
                 Iterator<AgreementsEntity> agreements = productEntity.getAgreements();
                 while (agreements.hasNext()) {
                     AgreementsEntity agreementEntity = agreements.next();
-                    if (agreementEntity.getNumber() == agreement.getNumber()) {
+                    if (agreementEntity.getNumber().equals(agreement.getNumber())) {
                         throw new IllegalArgumentException(" Параметр Number \"№ Дополнительного соглашения (сделки)\" = \""+agreement.getNumber()+"\" уже существует для ЭП с ИД "+productId);
                     }
                 }
                 // Добавляем новое доп.соглашение
-                productEntity.addAgreement(new AgreementsEntity(agreement.getNumber()));
+                AgreementsEntity agreementsEntity = new AgreementsEntity(agreement.getNumber());
+                productEntity.addAgreement(agreementsEntity);
+                // Созданные доп.соглашения добавляем в ответ
+                csiResponse.getData().getSupplementaryAgreementId().add(agreementsEntity.getId());
             }
 
         }
 
-        productRepo.save(productEntity);
+        productRepo.saveAndFlush(productEntity);
 
+        // Дозаполняем ответ 
         csiResponse.getData().setInstanceId(productEntity.getId());
-        csiResponse.getData().setRegisterId(new int[]{111,222,333});
+
         return csiResponse;
-    };
+    }
     @Autowired
     public void setProductRepo(ProductRepo productRepo) {
         this.productRepo = productRepo;
