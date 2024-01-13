@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class CreateAccountRequest {
+    private static com.networknt.schema.JsonSchema jsonSchema = JsonSchemaUtil.getJsonSchema(CreateAccountRequest.class);
+
     //Идентификатор ЭП, к которому привязывается продуктовый регистр
     @Getter @Setter
     private Integer instanceId;
@@ -47,4 +49,5 @@ public class CreateAccountRequest {
     // Код точки продаж
     @Getter @Setter
     private String salesCode;
+    public static com.networknt.schema.JsonSchema getJsonSchema() { return  jsonSchema; };
 }

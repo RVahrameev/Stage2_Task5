@@ -29,28 +29,18 @@ public class CsiController {
     private CsiService csiService;
     private CreateAccountService accountService;
 
-    private <T> T validateAndParseJson(String jsonStr, String jsonSchemaFile, Class<T> objClass)
+    private <T> T validateAndParseJson(String jsonStr, JsonSchema jsonSchema, Class<T> objClass)
             throws JsonProcessingException, IllegalArgumentException
     {
-        System.out.println(jsonStr);
-        // Вычитываем схему, которой должен соответствовать входящий json
-        SchemaValidatorsConfig config = new SchemaValidatorsConfig();
-        config.setLocale(new Locale("ru", "RU"));
-        JsonSchema jsonSchema =
-                JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7)
-                        .getSchema(
-                                ClassLoader.getSystemResourceAsStream(jsonSchemaFile),
-                                config
-                                );
-
         // Поскольку мы решили валидировать json, то он к нам приходит неразборанным
         // поэтому нам нужен маппер, который его переведёт в структуру нашего объекта
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE);
         // Валидируем полученный json
         Set<ValidationMessage> validateErorrs = jsonSchema.validate(objectMapper.readTree(jsonStr));
+
+        // Если входящий json прошёл проверку создаем входящий объект и возвращаем его
         if (validateErorrs.isEmpty()) {
-            // Если входящий json прошёл проверку направляем создаем входящий объект и возвращаем его
             return objectMapper.readValue(jsonStr, objClass);
         } else {
             // Найденные ошибки собираем и генерируем с ними исключение
@@ -71,7 +61,7 @@ public class CsiController {
         HttpStatus httpStatus;
 
         try {
-            CreateCsiRequest csiRequest = validateAndParseJson(requestJsonStr, "json-model/createCsiRequestJsonModel.json", CreateCsiRequest.class);
+            CreateCsiRequest csiRequest = validateAndParseJson(requestJsonStr, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
             csiResponse = csiService.createCsi(csiRequest);
             httpStatus = HttpStatus.OK;
         }
@@ -102,7 +92,7 @@ public class CsiController {
         CreateAccountResponse accountResponse;
         HttpStatus httpStatus;
         try {
-            CreateAccountRequest accountRequest = validateAndParseJson(requestJsonStr, "json-model/createAccountRequestJsonModel.json", CreateAccountRequest.class);
+            CreateAccountRequest accountRequest = validateAndParseJson(requestJsonStr, CreateAccountRequest.getJsonSchema(), CreateAccountRequest.class);
             accountResponse = accountService.createAccount(accountRequest);
             httpStatus = HttpStatus.OK;
         }

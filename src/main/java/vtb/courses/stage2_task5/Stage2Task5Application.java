@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class Stage2Task5Application {
 
 	public static void main(String[] args) {
-//		AnnotationConfigApplicationContext applicationContext =
-//				new AnnotationConfigApplicationContext("vtb.courses.stage2_task5", "vtb.courses.stage2_task5.Repository");
 		SpringApplication.run(Stage2Task5Application.class, args);
 	}
 

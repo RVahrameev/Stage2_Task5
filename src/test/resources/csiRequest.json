@@ -1,0 +1,40 @@
+{
+  "instanceId": null,
+  "productType": "НСО",
+  "productCode": "03.012.002",
+  "registerType": "03.012.002_47533_ComSoLd",
+  "mdmCode": "cl001",
+  "contractNumber": "001/2023_NSO",
+  "contractDate": "2023-12-01",
+  "priority": 1,
+  "interestRatePenalty": 12.3,
+  "minimalBalance": 11.2,
+  "thresholdAmount": 10.1,
+  "accountingDetails": "расчётный счёт 4070281030000123456 в Сбербанке",
+  "rateType": "прогрессивная",
+  "taxPercentageRate": 9.9,
+  "technicalOverdraftLimitAmount": 9.8,
+  "contractId": 0,
+  "branchCode": "001",
+  "isoCurrencyCode": "A98",
+  "additionalPropertiesVip": {
+    "data": [
+      {
+        "key": "RailwayRegionOwn",
+        "value": "ABC",
+        "name": "Регион принадлежности железной дороги"
+      },
+      {
+        "key": "counter",
+        "value": "123",
+        "name": "Счетчик"
+      }
+    ]
+  },
+  "instanceAgreement": [
+    {
+      "supplementaryAgreementId": 123,
+      "number": "string"
+    }
+  ]
+}

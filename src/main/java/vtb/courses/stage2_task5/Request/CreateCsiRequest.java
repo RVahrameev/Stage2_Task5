@@ -9,6 +9,8 @@ import java.util.Date;
 
 @ToString
 public class CreateCsiRequest {
+    private static com.networknt.schema.JsonSchema jsonSchema = JsonSchemaUtil.getJsonSchema(CreateCsiRequest.class);
+
     @Getter @Setter
     private Integer instanceId;
     @Getter @Setter
@@ -73,4 +75,8 @@ public class CreateCsiRequest {
         @Getter @Setter
         private String name;
     }
+
+    public static com.networknt.schema.JsonSchema getJsonSchema() { return  jsonSchema; };
+
 }
+

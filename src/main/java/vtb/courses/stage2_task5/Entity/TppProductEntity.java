@@ -17,8 +17,8 @@ import java.util.*;
 @Entity
 @Table(name = "tpp_product", schema = "public", catalog = "postgres")
 public class TppProductEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id @Getter @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
