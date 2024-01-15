@@ -7,6 +7,8 @@ import vtb.courses.stage2_task5.Entity.AccountPoolEntity;
 import vtb.courses.stage2_task5.Entity.TppRefProductRegisterTypeEntity;
 import vtb.courses.stage2_task5.Repository.AccountPoolRepo;
 
+import java.util.List;
+
 @Service
 public class AccountNumService {
 
@@ -24,10 +26,11 @@ public class AccountNumService {
             throw new NoResultException("В пуле счетов закончились счета");
         }
 
-        String retAccountNum = accountPool.getAccounts().get(0);
+        List<String> accounts = accountPool.getAccounts();
+        String retAccountNum = accounts.get(0);
 
         // Удаляем счёт из пула
-        accountPool.getAccounts().remove(0);
+        accounts.remove(0);
 
         return retAccountNum;
     }
