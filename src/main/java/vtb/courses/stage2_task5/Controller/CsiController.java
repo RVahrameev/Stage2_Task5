@@ -20,7 +20,6 @@ import vtb.courses.stage2_task5.Service.CreateAccountService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Locale;
 import java.util.Set;
 
 @RestController

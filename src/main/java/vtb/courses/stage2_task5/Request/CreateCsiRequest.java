@@ -9,7 +9,7 @@ import java.util.Date;
 
 @ToString
 public class CreateCsiRequest {
-    private static com.networknt.schema.JsonSchema jsonSchema = JsonSchemaUtil.getJsonSchema(CreateCsiRequest.class);
+    private static final com.networknt.schema.JsonSchema jsonSchema = JsonSchemaUtil.getJsonSchema(CreateCsiRequest.class);
 
     @Getter @Setter
     private Integer instanceId;
@@ -78,7 +78,7 @@ public class CreateCsiRequest {
         private String name;
     }
 
-    public static com.networknt.schema.JsonSchema getJsonSchema() { return  jsonSchema; };
+    public static com.networknt.schema.JsonSchema getJsonSchema() { return  jsonSchema; }
 
 }
 

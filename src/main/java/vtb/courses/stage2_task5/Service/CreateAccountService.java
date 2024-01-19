@@ -1,6 +1,5 @@
 package vtb.courses.stage2_task5.Service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,12 +30,12 @@ public class CreateAccountService {
         CreateAccountResponse accountResponse = new CreateAccountResponse();
 
         // Ищем экземпляр продукта по переданному Id
-        try {
+        if (productRepo.existsById(accountRequest.getInstanceId())) {
             productId = productRepo.getReferenceById(accountRequest.getInstanceId());
-        } catch (jakarta.persistence.EntityNotFoundException e) {
-            System.out.println(e);
+        } else {
             throw new NoResultException("По instanceId \"Идентификатор ЭП\" <"+accountRequest.getInstanceId()+"> не найден экземпляр продукта.");
         }
+
         // Проверяем на дубли
         TppRefProductRegisterTypeEntity registerTypeEntity = registerTypeRepo.getByValue(accountRequest.getRegistryTypeCode());
         if (registerRepo.existsByProductIdAndRegisterType(productId, registerTypeEntity)) {

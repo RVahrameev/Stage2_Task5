@@ -1,6 +1,5 @@
 package vtb.courses.stage2_task5.Service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,17 +13,10 @@ import vtb.courses.stage2_task5.Repository.*;
 import jakarta.persistence.NoResultException;
 import vtb.courses.stage2_task5.Request.CreateAccountRequest;
 import vtb.courses.stage2_task5.Request.CreateCsiRequest;
-import vtb.courses.stage2_task5.Response.CsiResponse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.matchesRegex;
-import static org.mockito.ArgumentMatchers.any;;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -98,8 +90,10 @@ public class ServiceTest {
         accountRequestBad.setInstanceId(productIdBad.getId());
         accountRequestBad.setRegistryTypeCode("03.012.002_47533_ComSoLd");
         // test case 1 - mocks
-        given(productRepo.getReferenceById(accountRequestBad.getInstanceId()))
-                .willThrow(EntityNotFoundException.class);
+        given(productRepo.existsById(accountRequestBad.getInstanceId()))
+                .willReturn(false);
+//        given(productRepo.getReferenceById(accountRequestBad.getInstanceId()))
+//                .willThrow(EntityNotFoundException.class);
         // test case 1 - run
         Assertions.assertThrows(NoResultException.class, ()->accountService.createAccount(accountRequestBad), "Не сработала проверка на доступность InstanceId");
 
@@ -114,6 +108,8 @@ public class ServiceTest {
         registerTypeEntity.setValue("03.012.002_47533_ComSoLd");
         registerTypeEntity.setId(10);
         // test case 2 - mocks
+        given(productRepo.existsById(accountRequestBad2.getInstanceId()))
+                .willReturn(true);
         given(productRepo.getReferenceById(accountRequestBad2.getInstanceId()))
                 .willReturn(productIdBad2);
         given(registerTypeRepo.getByValue(accountRequestBad2.getRegistryTypeCode()))
@@ -218,36 +214,6 @@ public class ServiceTest {
         // test case 5 - run
         Assertions.assertThrows(IllegalArgumentException.class, ()->csiService.createCsi(csiRequest5), "Не сработала проверка на дубль номера дополнительного соглашения");
 
-
-//        // test case 5 definitions
-//        CreateCsiRequest csiRequest5 = new CreateCsiRequest();
-//        csiRequest5.setInstanceId(null);
-//        csiRequest5.setProductCode("03.012.002_47533_ComSoLd");
-//        csiRequest5.setMdmCode("cl001");
-//        csiRequest5.setProductType("СМО");
-//        csiRequest5.setBranchCode("001");
-//        csiRequest5.setInterestRatePenalty(1.0);
-//        csiRequest5.setMinimalBalance(1.0);
-//        csiRequest5.setTaxPercentageRate(1.0);
-//        csiRequest5.setThresholdAmount(1.0);
-//        csiRequest5.setContractNumber("777");
-//        csiRequest5.setIsoCurrencyCode("A98");
-//        List<TppRefProductRegisterTypeEntity> registerTypes5 = new ArrayList<>();
-//        TppRefProductRegisterTypeEntity registerType5 = new TppRefProductRegisterTypeEntity();
-//        registerType5.setValue("03.012.002_47533_ComSoLd");
-//        registerTypes5.add(registerType5);
-//        AccountPoolEntity accountPool = getAccountPool();
-//
-//        given(registerTypeRepo.findAllByProductClassCodeAndAccountType(csiRequest5.getProductCode(), "Клиентский"))
-//                .willReturn(registerTypes5);
-//        given(productRepo.getByNumber(csiRequest5.getContractNumber()))
-//                .willReturn(null);
-//        csiService.setAccountNumService(accountNumService);
-//        given(poolRepo.getByBranchCodeAndCurrencyCodeAndMdmCodeAndRegisterTypeCode(csiRequest5.getBranchCode(), csiRequest5.getIsoCurrencyCode(), csiRequest5.getMdmCode(), registerType5.getValue()))
-//                .willReturn(accountPool);
-//        // test case 5 run
-//        CsiResponse csiResponse = csiService.createCsi(csiRequest5);
-//        System.out.println(csiResponse);
     }
 
 }
