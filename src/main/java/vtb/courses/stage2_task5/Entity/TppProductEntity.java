@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import vtb.courses.stage2_task5.Request.CreateCsiRequest;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @NoArgsConstructor
+@ToString
 @Component
 @Entity
 @Table(name = "tpp_product", schema = "public", catalog = "postgres")
@@ -100,7 +102,7 @@ public class TppProductEntity {
     private TppBranchEntity branch;
 
     @OneToMany(mappedBy = "agreementId")
-    private List<AgreementsEntity> agreements;
+    private List<AgreementsEntity> agreements = new ArrayList<>();
 
     @Transient
     private static ProductClassRepo productClassRepo;

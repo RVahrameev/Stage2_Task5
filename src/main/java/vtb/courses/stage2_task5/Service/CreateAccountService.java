@@ -26,14 +26,15 @@ public class CreateAccountService {
 
 
     @Transactional
-    public CreateAccountResponse createAccount(CreateAccountRequest accountRequest){
+    public CreateAccountResponse createAccount(CreateAccountRequest accountRequest) throws NoResultException {
         TppProductEntity productId;
         CreateAccountResponse accountResponse = new CreateAccountResponse();
 
         // Ищем экземпляр продукта по переданному Id
         try {
             productId = productRepo.getReferenceById(accountRequest.getInstanceId());
-        } catch (EntityNotFoundException e) {
+        } catch (jakarta.persistence.EntityNotFoundException e) {
+            System.out.println(e);
             throw new NoResultException("По instanceId \"Идентификатор ЭП\" <"+accountRequest.getInstanceId()+"> не найден экземпляр продукта.");
         }
         // Проверяем на дубли

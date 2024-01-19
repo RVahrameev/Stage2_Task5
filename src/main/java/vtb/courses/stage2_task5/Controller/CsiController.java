@@ -29,7 +29,7 @@ public class CsiController {
     private CsiService csiService;
     private CreateAccountService accountService;
 
-    private <T> T validateAndParseJson(String jsonStr, JsonSchema jsonSchema, Class<T> objClass)
+    public  <T> T validateAndParseJson(String jsonStr, JsonSchema jsonSchema, Class<T> objClass)
             throws JsonProcessingException, IllegalArgumentException
     {
         // Поскольку мы решили валидировать json, то он к нам приходит неразборанным
@@ -55,7 +55,7 @@ public class CsiController {
     }
 
     @PostMapping("corporate-settlement-instance/create/")
-    private ResponseEntity<CsiResponse> createCsi(@RequestBody String requestJsonStr) {
+    public ResponseEntity<CsiResponse> createCsi(@RequestBody String requestJsonStr) {
 
         CsiResponse csiResponse;
         HttpStatus httpStatus;
@@ -88,7 +88,7 @@ public class CsiController {
     }
 
     @PostMapping("corporate-settlement-account/create/")
-    private ResponseEntity<CreateAccountResponse> createAccount(@RequestBody String requestJsonStr) {
+    public ResponseEntity<CreateAccountResponse> createAccount(@RequestBody String requestJsonStr) {
         CreateAccountResponse accountResponse;
         HttpStatus httpStatus;
         try {

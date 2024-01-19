@@ -53,6 +53,7 @@ public class CreateCsiRequest {
     private AdditionalPropertiesVip additionalPropertiesVip;
 
     @NoArgsConstructor
+    @ToString
     public static class Agreement {
         @Getter @Setter
         private Integer supplementaryAgreementId;
@@ -61,6 +62,7 @@ public class CreateCsiRequest {
     }
 
     @NoArgsConstructor
+    @ToString
     public static class AdditionalPropertiesVip {
         @Getter @Setter
         private Data[] data;

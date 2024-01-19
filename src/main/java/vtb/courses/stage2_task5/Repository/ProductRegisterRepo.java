@@ -9,4 +9,5 @@ import vtb.courses.stage2_task5.Entity.TppRefProductRegisterTypeEntity;
 @Repository
 public interface ProductRegisterRepo extends JpaRepository<TppProductRegisterEntity, Integer> {
     boolean existsByProductIdAndRegisterType(TppProductEntity productId, TppRefProductRegisterTypeEntity registerType);
+    TppProductRegisterEntity getByProductIdAndRegisterType(TppProductEntity productId, TppRefProductRegisterTypeEntity registerType);
 }

@@ -204,6 +204,7 @@ insert into tpp_currency (code, name) values
     ('RUB', 'Рубль'),
     ('USD', 'Доллар'),
     ('EUR', 'Евро'),
+    ('FRN', 'Франк'),
     ('CYN', 'Юань');
 
 DO $$
