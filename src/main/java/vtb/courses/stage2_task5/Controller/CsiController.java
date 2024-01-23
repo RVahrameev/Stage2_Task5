@@ -15,8 +15,10 @@ import vtb.courses.stage2_task5.Request.CreateAccountRequest;
 import vtb.courses.stage2_task5.Request.CreateCsiRequest;
 import vtb.courses.stage2_task5.Response.CreateAccountResponse;
 import vtb.courses.stage2_task5.Response.CsiResponse;
+import vtb.courses.stage2_task5.Service.CreateAccountServiceIntf;
 import vtb.courses.stage2_task5.Service.CsiService;
 import vtb.courses.stage2_task5.Service.CreateAccountService;
+import vtb.courses.stage2_task5.Service.CsiServiceIntf;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,8 +27,8 @@ import java.util.Set;
 @RestController
 public class CsiController {
 
-    private CsiService csiService;
-    private CreateAccountService accountService;
+    private CsiServiceIntf csiService;
+    private CreateAccountServiceIntf accountService;
 
     public  <T> T validateAndParseJson(String jsonStr, JsonSchema jsonSchema, Class<T> objClass)
             throws JsonProcessingException, IllegalArgumentException

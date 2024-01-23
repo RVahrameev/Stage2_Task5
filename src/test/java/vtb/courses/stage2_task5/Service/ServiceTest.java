@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import vtb.courses.stage2_task5.Entity.*;
 import vtb.courses.stage2_task5.Repository.*;
 import jakarta.persistence.NoResultException;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class ServiceTest {
 
@@ -92,8 +94,6 @@ public class ServiceTest {
         // test case 1 - mocks
         given(productRepo.existsById(accountRequestBad.getInstanceId()))
                 .willReturn(false);
-//        given(productRepo.getReferenceById(accountRequestBad.getInstanceId()))
-//                .willThrow(EntityNotFoundException.class);
         // test case 1 - run
         Assertions.assertThrows(NoResultException.class, ()->accountService.createAccount(accountRequestBad), "Не сработала проверка на доступность InstanceId");
 

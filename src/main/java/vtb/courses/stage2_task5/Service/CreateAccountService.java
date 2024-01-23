@@ -16,12 +16,12 @@ import vtb.courses.stage2_task5.Response.CreateAccountResponse;
 import java.util.List;
 
 @Service
-public class CreateAccountService {
+public class CreateAccountService implements CreateAccountServiceIntf{
 
     private ProductRegisterRepo registerRepo;
     private ProductRepo productRepo;
     private ProductRegisterTypeRepo registerTypeRepo;
-    private AccountNumService accountNumService;
+    private AccountNumServiceIntf accountNumService;
 
 
     @Transactional
@@ -69,17 +69,14 @@ public class CreateAccountService {
     public void setRegistryTypeRepo(ProductRegisterRepo registerRepo) {
         this.registerRepo = registerRepo;
     }
-
     @Autowired
     public void setProductRepo(ProductRepo productRepo) {
         this.productRepo = productRepo;
     }
-
     @Autowired
     public void setRegisterTypeRepo(ProductRegisterTypeRepo registerTypeRepo) {
         this.registerTypeRepo = registerTypeRepo;
     }
-
     @Autowired
     public void setAccountNumService(AccountNumService accountNumService) {
         this.accountNumService = accountNumService;

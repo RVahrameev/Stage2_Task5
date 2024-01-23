@@ -10,7 +10,7 @@ import vtb.courses.stage2_task5.Repository.AccountPoolRepo;
 import java.util.List;
 
 @Service
-public class AccountNumService {
+public class AccountNumService implements AccountNumServiceIntf{
 
     private AccountPoolRepo accountPoolRepo;
 
@@ -34,9 +34,9 @@ public class AccountNumService {
 
         return retAccountNum;
     }
+
     @Autowired
     public void setAccountPoolRepo(AccountPoolRepo accountPoolRepo) {
-        System.out.println(this + "   setAccountPoolRepo " + accountPoolRepo);
         this.accountPoolRepo = accountPoolRepo;
     }
 }

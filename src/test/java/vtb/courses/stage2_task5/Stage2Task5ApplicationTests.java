@@ -33,13 +33,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesRegex;
 
 @SpringBootTest
-//@AutoConfigureMockWebServiceClient
-//@FlywayTest(locationsForMigrate = {"scripts"}, overrideLocations = true)
 @ActiveProfiles("test")
-//@RunWith(SpringRunner.class)
-//@ContextConfiguration(classes = {Stage2Task5ApplicationTests.TestConfig.class})
-//@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
-//		FlywayTestExecutionListener.class })
 class Stage2Task5ApplicationTests {
 	@Autowired
 	private CreateAccountService createAccountService;

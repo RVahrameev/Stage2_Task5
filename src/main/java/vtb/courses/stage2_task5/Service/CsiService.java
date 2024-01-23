@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CsiService {
+public class CsiService implements CsiServiceIntf{
 
     private ProductRepo productRepo;
     private ProductRegisterTypeRepo registerTypeRepo;
     private ProductRegisterRepo registerRepo;
-    private AccountNumService accountNumService;
+    private AccountNumServiceIntf accountNumService;
 
     @Transactional
     public CsiResponse createCsi(CreateCsiRequest csiRequest){

@@ -61,12 +61,6 @@
 			<version>5.3.2</version>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.flywaydb.flyway-test-extensions</groupId>-->
-<!--			<artifactId>flyway-spring-test</artifactId>-->
-<!--			<version>7.0.0</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest</artifactId>
@@ -96,32 +90,4 @@
 		</plugins>
 	</build>
 
-<!--	<profiles>-->
-<!--		<profile>-->
-<!--			<id>pg-test</id>-->
-<!--			<build>-->
-<!--				<plugins>-->
-<!--					<plugin>-->
-<!--						<groupId>org.apache.maven.plugins</groupId>-->
-<!--						<artifactId>maven-surefire-plugin</artifactId>-->
-<!--						<configuration>-->
-<!--							<systemPropertyVariables>-->
-<!--								<flyway.driver>org.postgresql.Driver</flyway.driver>-->
-<!--								<flyway.url>jdbc:postgresql://localhost:5433/postgres</flyway.url>-->
-<!--								<flyway.user>postgres</flyway.user>-->
-<!--								<flyway.password>sys</flyway.password>-->
-<!--								<flyway.locations>scripts</flyway.locations>-->
-<!--							</systemPropertyVariables>-->
-<!--							<threadCount>1</threadCount>-->
-<!--						</configuration>-->
-<!--						<goals>-->
-<!--							<goal>test</goal>-->
-<!--						</goals>-->
-<!--						<executions>-->
-<!--						</executions>-->
-<!--					</plugin>-->
-<!--				</plugins>-->
-<!--			</build>-->
-<!--		</profile>-->
-<!--	</profiles>-->
 </project>
