@@ -78,7 +78,10 @@ public class CreateCsiRequest {
         private String name;
     }
 
-    public static com.networknt.schema.JsonSchema getJsonSchema() { return  jsonSchema; }
+    public static com.networknt.schema.JsonSchema getJsonSchema() {
+        System.out.println("jsonSchema = "+jsonSchema);
+        return  jsonSchema;
+    }
 
 }
 

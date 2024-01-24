@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import org.springframework.test.context.ActiveProfiles;
@@ -28,15 +25,14 @@ import vtb.courses.stage2_task5.Request.CreateAccountRequest;
 import vtb.courses.stage2_task5.Request.CreateCsiRequest;
 import vtb.courses.stage2_task5.Response.CreateAccountResponse;
 import vtb.courses.stage2_task5.Response.CsiResponse;
-import vtb.courses.stage2_task5.Service.CreateAccountService;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesRegex;
+import vtb.courses.stage2_task5.Request.JsonSchemaUtil;
+
 
 @SpringBootTest
 @ActiveProfiles("test")
 class Stage2Task5ApplicationTests {
-	@Autowired
-	private CreateAccountService createAccountService;
 	@Autowired
 	private CsiController csiController;
 
@@ -55,24 +51,14 @@ class Stage2Task5ApplicationTests {
 		flyway.migrate();
 	}
 
-	private String fileToString(String fileName) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				ClassLoader.getSystemResourceAsStream(fileName)));
-		String line;
-		StringBuilder text = new StringBuilder();
-		while ((line = reader.readLine()) != null) {
-			text.append(line);
-		}
-		reader.close();
-
-		return text.toString();
-	}
-
 	@Test
 	@DisplayName("Проверка контролируемости обязательных параметров")
 	public void jsonRequirableTest() throws IOException {
-		String wrongJson = fileToString("json/csiRequest_MissedRequired.json");
+		System.out.println("Проверка контролируемости обязательных параметров");
+		String wrongJson = JsonSchemaUtil.fileToString("json/csiRequest_MissedRequired.json");
+		System.out.println(wrongJson);
 		ResponseEntity<CsiResponse> csiResponse = csiController.createCsi(wrongJson);
+		System.out.println(csiResponse);
 		assertThat("Не произошла проверка на обязательность параметров", csiResponse.toString().replace('\n',' '), matchesRegex(".+Ошибки разбора входящего json.+отсутствует, но требуется.+"));
 	}
 
@@ -80,8 +66,10 @@ class Stage2Task5ApplicationTests {
 	@Test
 	@DisplayName("Интеграционный тест сервиса создания ЭП, ПР и доп.соглашения")
 	public void csiServiceTest() throws IOException {
+		System.out.println("Интеграционный тест сервиса создания ЭП, ПР и доп.соглашения");
 		// Получим тестовый json
-		String json = fileToString("json/csiRequest.json");
+		String json = JsonSchemaUtil.fileToString("json/csiRequest.json");
+		System.out.println(json);
 
 		// Распарсим его
 		CreateCsiRequest csiRequest = csiController.validateAndParseJson(json, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
@@ -116,7 +104,7 @@ class Stage2Task5ApplicationTests {
 		Assertions.assertTrue(productRegisterRepo.existsByProductIdAndRegisterType(productEntity,registerTypeEntity),"Не создан продуктовый регистр нужного типа");
 
 		// Загрузим тестовый json на создание ПР
-		String accountJson = fileToString("json/createAccountRequest.json");
+		String accountJson = JsonSchemaUtil.fileToString("json/createAccountRequest.json");
 
 		// Распарсим его
 		CreateAccountRequest accountRequest = csiController.validateAndParseJson(accountJson, CreateAccountRequest.getJsonSchema(), CreateAccountRequest.class);
@@ -159,7 +147,7 @@ class Stage2Task5ApplicationTests {
 
 		// Теперь к созданному ЭП создаём доп.соглашение
 		// Получим тестовый json
-		String jsonAgreement = fileToString("json/csiRequestAddAgreement.json");
+		String jsonAgreement = JsonSchemaUtil.fileToString("json/csiRequestAddAgreement.json");
 
 		// Распарсим его
 		CreateCsiRequest csiAgreementRequest = csiController.validateAndParseJson(jsonAgreement, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
@@ -183,8 +171,10 @@ class Stage2Task5ApplicationTests {
 	@Test
 	@DisplayName("Тест возникновения ошибок при работе сервиса создания ЭП")
 	public void csiServiceErrorTest() throws IOException {
+		System.out.println("Тест возникновения ошибок при работе сервиса создания ЭП");
 		// Получим тестовый json
-		String json = fileToString("json/csiRequestNoProduct.json");
+		String json = JsonSchemaUtil.fileToString("json/csiRequestNoProduct.json");
+		System.out.println(json);
 		// Вызовем с ним соответствующий метод контроллера
 		ResponseEntity<CsiResponse> csiResponse = csiController.createCsi(json);
 		System.out.println(csiResponse);

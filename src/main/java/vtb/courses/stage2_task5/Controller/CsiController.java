@@ -62,7 +62,8 @@ public class CsiController {
         HttpStatus httpStatus;
 
         try {
-            CreateCsiRequest csiRequest = validateAndParseJson(requestJsonStr, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
+            JsonSchema csiRequestJsonSchema = CreateCsiRequest.getJsonSchema();
+            CreateCsiRequest csiRequest = validateAndParseJson(requestJsonStr, csiRequestJsonSchema, CreateCsiRequest.class);
             csiResponse = csiService.createCsi(csiRequest);
             httpStatus = HttpStatus.OK;
         }
