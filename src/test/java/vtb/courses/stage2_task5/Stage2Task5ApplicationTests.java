@@ -27,6 +27,8 @@ import vtb.courses.stage2_task5.Response.CreateAccountResponse;
 import vtb.courses.stage2_task5.Response.CsiResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesRegex;
+import static vtb.courses.stage2_task5.Request.JsonSchemaUtil.validateAndParseJson;
+
 import vtb.courses.stage2_task5.Request.JsonSchemaUtil;
 
 
@@ -72,7 +74,7 @@ class Stage2Task5ApplicationTests {
 		System.out.println(json);
 
 		// Распарсим его
-		CreateCsiRequest csiRequest = csiController.validateAndParseJson(json, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
+		CreateCsiRequest csiRequest = validateAndParseJson(json, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
 
 		// Вызовем с ним соответствующий метод контроллера
 		ResponseEntity<CsiResponse> csiResponse = csiController.createCsi(json);
@@ -107,7 +109,7 @@ class Stage2Task5ApplicationTests {
 		String accountJson = JsonSchemaUtil.fileToString("json/createAccountRequest.json");
 
 		// Распарсим его
-		CreateAccountRequest accountRequest = csiController.validateAndParseJson(accountJson, CreateAccountRequest.getJsonSchema(), CreateAccountRequest.class);
+		CreateAccountRequest accountRequest = validateAndParseJson(accountJson, CreateAccountRequest.getJsonSchema(), CreateAccountRequest.class);
 		ResponseEntity<CreateAccountResponse> accountResponse;
 
 		// Для начала пытаемся ещё раз создать такой же счёт,для чего вызовем метод контроллера по обработке json на создание ПР
@@ -150,7 +152,7 @@ class Stage2Task5ApplicationTests {
 		String jsonAgreement = JsonSchemaUtil.fileToString("json/csiRequestAddAgreement.json");
 
 		// Распарсим его
-		CreateCsiRequest csiAgreementRequest = csiController.validateAndParseJson(jsonAgreement, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
+		CreateCsiRequest csiAgreementRequest = validateAndParseJson(jsonAgreement, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
 
 		// Вызовем с ним соответствующий метод контроллера
 		ResponseEntity<CsiResponse> csiAgreementResponse = csiController.createCsi(jsonAgreement);

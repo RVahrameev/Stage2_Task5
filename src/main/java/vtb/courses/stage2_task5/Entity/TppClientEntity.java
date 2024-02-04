@@ -8,21 +8,23 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tpp_client", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class TppClientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Getter @Setter
+    @Id
     @Column(name = "id")
     private int id;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "mdm_code")
     private String mdmCode;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "name")
     private String name;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "kpp")
     private String kpp;
 

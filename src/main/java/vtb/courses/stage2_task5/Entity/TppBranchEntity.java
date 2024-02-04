@@ -8,15 +8,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tpp_branch", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class TppBranchEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Getter @Setter
+    @Id
     @Column(name = "id")
     private int id;
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "code")
     private String code;
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "name")
     private String name;
 

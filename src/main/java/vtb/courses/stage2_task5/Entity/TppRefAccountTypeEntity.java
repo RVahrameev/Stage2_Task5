@@ -8,13 +8,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tpp_ref_account_type", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class TppRefAccountTypeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Getter @Setter
+    @Id
     @Column(name = "id")
     private int id;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "value")
     private String value;
 

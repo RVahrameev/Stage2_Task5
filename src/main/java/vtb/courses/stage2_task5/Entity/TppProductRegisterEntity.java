@@ -10,29 +10,29 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "tpp_product_register", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class TppProductRegisterEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Getter @Setter
+    @Id
     @Column(name = "id")
     private Integer id;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "product_id", referencedColumnName = "id")
     private TppProductEntity productId;
 
-    @Getter @Setter
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "register_type", referencedColumnName = "id")
     private TppRefProductRegisterTypeEntity registerType;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "account_num")
     private String accountNum;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "currency")
     private String currency;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "state")
     private AccountState state;
 

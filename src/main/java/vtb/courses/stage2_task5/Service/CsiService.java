@@ -1,17 +1,17 @@
 package vtb.courses.stage2_task5.Service;
 
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vtb.courses.stage2_task5.Entity.AgreementsEntity;
-import vtb.courses.stage2_task5.Entity.TppProductEntity;
-import vtb.courses.stage2_task5.Entity.TppProductRegisterEntity;
-import vtb.courses.stage2_task5.Entity.TppRefProductRegisterTypeEntity;
+import vtb.courses.stage2_task5.Entity.*;
 import vtb.courses.stage2_task5.Repository.*;
 import vtb.courses.stage2_task5.Request.CreateCsiRequest;
 import vtb.courses.stage2_task5.Response.CsiResponse;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +23,30 @@ public class CsiService implements CsiServiceIntf{
     private ProductRegisterTypeRepo registerTypeRepo;
     private ProductRegisterRepo registerRepo;
     private AccountNumServiceIntf accountNumService;
+    private AgreementsRepo agreementsRepo;
+    private ProductClassRepo productClassRepo;
+    private ClientRepo clientRepo;
+    private BranchRepo branchRepo;
+
+    private TppProductEntity createProductEntity(CreateCsiRequest csiRequest) {
+        TppProductEntity pe = new TppProductEntity();
+        pe.setProductCodeId(productClassRepo.getByValue(csiRequest.getProductCode()));
+        pe.setClientId(clientRepo.getByMdmCode(csiRequest.getMdmCode()));
+        pe.setType(ProductType.valueOf(csiRequest.getProductType()));
+        pe.setNumber(csiRequest.getContractNumber());
+        pe.setPriority(csiRequest.getPriority());
+        pe.setDateOfConclusion(csiRequest.getContractDate());
+        pe.setStartDateTime(new Date());
+        pe.setPenaltyRate(BigDecimal.valueOf(csiRequest.getInterestRatePenalty()));
+        pe.setNso(BigDecimal.valueOf(csiRequest.getMinimalBalance()));
+        pe.setThresholdAmount(BigDecimal.valueOf(csiRequest.getThresholdAmount()));
+        pe.setInterestRateType(csiRequest.getRateType());
+        pe.setTaxRate(BigDecimal.valueOf(csiRequest.getTaxPercentageRate()));
+        pe.setState("OPEN");
+        pe.setCurrency(csiRequest.getIsoCurrencyCode());
+        pe.setBranch(branchRepo.getByCode(csiRequest.getBranchCode()));
+        return pe;
+    }
 
     @Transactional
     public CsiResponse createCsi(CreateCsiRequest csiRequest){
@@ -45,7 +69,7 @@ public class CsiService implements CsiServiceIntf{
             }
 
             // Создаем ЭП
-            productEntity = new TppProductEntity(csiRequest);
+            productEntity = createProductEntity(csiRequest);
 
             // Создаём связанные ПР
             for (TppRefProductRegisterTypeEntity registerType: registerTypes) {
@@ -77,6 +101,7 @@ public class CsiService implements CsiServiceIntf{
                 // Добавляем новое доп.соглашение
                 AgreementsEntity agreementsEntity = new AgreementsEntity(agreement.getNumber());
                 productEntity.addAgreement(agreementsEntity);
+                agreementsRepo.save(agreementsEntity);
                 // Созданные доп.соглашения добавляем в ответ
                 csiResponse.getData().getSupplementaryAgreementId().add(agreementsEntity.getId());
             }
@@ -103,8 +128,24 @@ public class CsiService implements CsiServiceIntf{
         this.registerRepo = registerRepo;
     }
     @Autowired
-    public void setAccountNumService(AccountNumService accountNumService) {
+    public void setAccountNumService(AccountNumServiceIntf accountNumService) {
         this.accountNumService = accountNumService;
+    }
+    @Autowired
+    public void setAgreementsRepo(AgreementsRepo agreementsRepo) {
+        this.agreementsRepo = agreementsRepo;
+    }
+    @Autowired
+    public void setRegistryTypeRepo(ProductClassRepo productClassRepo) {
+        this.productClassRepo = productClassRepo;
+    }
+    @Autowired
+    public void setClientRepo(ClientRepo clientRepo) {
+        this.clientRepo = clientRepo;
+    }
+    @Autowired
+    public void setBranchRepo(BranchRepo branchRepo) {
+        this.branchRepo = branchRepo;
     }
 
 }

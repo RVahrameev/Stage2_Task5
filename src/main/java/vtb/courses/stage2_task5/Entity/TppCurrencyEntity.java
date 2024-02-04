@@ -8,13 +8,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tpp_currency", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class TppCurrencyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Getter @Setter
+    @Id
     @Column(name = "code")
     private String code;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "name")
     private String name;
 

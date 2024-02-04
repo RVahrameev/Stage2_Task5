@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "vtb.courses.stage2_task5.Repository")
-@EnableTransactionManagement
+//@EnableJpaRepositories(basePackages = "vtb.courses.stage2_task5.Repository")
+//@EnableTransactionManagement
 public class Stage2Task5Application {
 
 	public static void main(String[] args) {

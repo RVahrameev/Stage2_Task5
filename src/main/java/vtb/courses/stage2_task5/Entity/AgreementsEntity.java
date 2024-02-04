@@ -8,19 +8,19 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "agreements", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class AgreementsEntity {
-    @Getter @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private int id;
 
-    @Getter @Setter
     @ManyToOne
     @JoinColumn(name = "agreement_id", referencedColumnName = "agreement_id")
     private TppProductEntity agreementId;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "number")
     private String number;
 

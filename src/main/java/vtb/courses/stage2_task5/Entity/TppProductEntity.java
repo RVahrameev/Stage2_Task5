@@ -1,14 +1,8 @@
 package vtb.courses.stage2_task5.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.*;
 import org.springframework.stereotype.Component;
-import vtb.courses.stage2_task5.Request.CreateCsiRequest;
-import vtb.courses.stage2_task5.Repository.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -104,44 +98,9 @@ public class TppProductEntity {
     @OneToMany(mappedBy = "agreementId")
     private List<AgreementsEntity> agreements = new ArrayList<>();
 
-    @Transient
-    private static ProductClassRepo productClassRepo;
-    @Transient
-    private static ClientRepo clientRepo;
-    @Transient
-    private static BranchRepo branchRepo;
-    @Transient
-    private static AgreementsRepo agreementsRepo;
-
-    public TppProductEntity(CreateCsiRequest csiRequest) {
-
-            // Ищем класс продукта в справочнике. Он 100% должен найтись, т.к. ранее мы искали по этому коду экземпляр TppRefProductRegisterTypeEntity
-            productCodeId = productClassRepo.getByValue(csiRequest.getProductCode());
-
-            // Заполняем остальные поля
-            clientId = clientRepo.getByMdmCode(csiRequest.getMdmCode());
-            type = ProductType.valueOf(csiRequest.getProductType());
-            number = csiRequest.getContractNumber();
-            priority = csiRequest.getPriority();
-            dateOfConclusion = csiRequest.getContractDate();
-            startDateTime = new Date();
-            endDateTime = null;
-            days = 0;
-            penaltyRate = BigDecimal.valueOf(csiRequest.getInterestRatePenalty());
-            nso = BigDecimal.valueOf(csiRequest.getMinimalBalance());
-            thresholdAmount = BigDecimal.valueOf(csiRequest.getThresholdAmount());
-            interestRateType = csiRequest.getRateType();
-            taxRate = BigDecimal.valueOf(csiRequest.getTaxPercentageRate());
-            reasonClose = null;
-            state = "OPEN";
-            currency = csiRequest.getIsoCurrencyCode();
-            branch = branchRepo.getByCode(csiRequest.getBranchCode());
-    }
-
     public void addAgreement(AgreementsEntity agreement){
         agreement.setAgreementId(this);
         agreements.add(agreement);
-        agreementsRepo.save(agreement);
     }
 
     public Iterator<AgreementsEntity> getAgreements() {
@@ -161,20 +120,4 @@ public class TppProductEntity {
         return Objects.hash(id, productCodeId, clientId, type, number, priority, dateOfConclusion, startDateTime, endDateTime, days, penaltyRate, nso, thresholdAmount, interestRateType, taxRate, reasonClose, state, currency, branch);
     }
 
-    @Autowired
-    public void setRegistryTypeRepo(ProductClassRepo productClassRepo) {
-        TppProductEntity.productClassRepo = productClassRepo;
-    }
-    @Autowired
-    public void setClientRepo(ClientRepo clientRepo) {
-        TppProductEntity.clientRepo = clientRepo;
-    }
-    @Autowired
-    public void setBranchRepo(BranchRepo branchRepo) {
-        TppProductEntity.branchRepo = branchRepo;
-    }
-    @Autowired
-    public void setAgreementsRepo(AgreementsRepo agreementsRepo) {
-        TppProductEntity.agreementsRepo = agreementsRepo;
-    }
 }

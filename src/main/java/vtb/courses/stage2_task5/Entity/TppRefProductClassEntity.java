@@ -8,37 +8,39 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tpp_ref_product_class", schema = "public", catalog = "postgres")
+@Getter
+@Setter
 public class TppRefProductClassEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id @Getter @Setter
+    @Id
     @Column(name = "id")
     private int id;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "value")
     private String value;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "gbl_code")
     private String gblCode;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "gbl_name")
     private String gblName;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "product_row_code")
     private String productRowCode;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "product_row_name")
     private String productRowName;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "subclass_code")
     private String subclassCode;
 
-    @Basic @Getter @Setter
+    @Basic
     @Column(name = "subclass_name")
     private String subclassName;
 

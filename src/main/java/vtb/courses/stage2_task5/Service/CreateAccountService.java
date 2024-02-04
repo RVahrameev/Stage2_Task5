@@ -78,7 +78,7 @@ public class CreateAccountService implements CreateAccountServiceIntf{
         this.registerTypeRepo = registerTypeRepo;
     }
     @Autowired
-    public void setAccountNumService(AccountNumService accountNumService) {
+    public void setAccountNumService(AccountNumServiceIntf accountNumService) {
         this.accountNumService = accountNumService;
     }
 }
