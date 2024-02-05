@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class CreateAccountRequest {
-    private static final com.networknt.schema.JsonSchema jsonSchema = JsonSchemaUtil.getJsonSchema(CreateAccountRequest.class);
+    private static final com.networknt.schema.JsonSchema jsonSchema = JsonUtil.getJsonSchema(CreateAccountRequest.class);
 
     //Идентификатор ЭП, к которому привязывается продуктовый регистр
     private Integer instanceId;

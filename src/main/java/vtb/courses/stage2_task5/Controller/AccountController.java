@@ -15,7 +15,7 @@ import vtb.courses.stage2_task5.Service.CreateAccountServiceIntf;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static vtb.courses.stage2_task5.Request.JsonSchemaUtil.validateAndParseJson;
+import static vtb.courses.stage2_task5.Request.JsonUtil.validateAndParseJson;
 
 @RestController
 public class AccountController {

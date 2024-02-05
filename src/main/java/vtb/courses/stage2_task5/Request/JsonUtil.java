@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Set;
 
-public class JsonSchemaUtil {
+public class JsonUtil {
 
     public static String fileToString(String fileName) throws IOException {
         InputStream jsonStream = ClassLoader.getSystemResourceAsStream("BOOT-INF/classes/"+fileName);

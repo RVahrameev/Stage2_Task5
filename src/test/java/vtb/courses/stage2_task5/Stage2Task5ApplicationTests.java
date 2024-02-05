@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.test.context.ActiveProfiles;
+import vtb.courses.stage2_task5.Controller.AccountController;
 import vtb.courses.stage2_task5.Controller.CsiController;
 import vtb.courses.stage2_task5.Entity.AgreementsEntity;
 import vtb.courses.stage2_task5.Entity.TppProductEntity;
@@ -27,9 +28,9 @@ import vtb.courses.stage2_task5.Response.CreateAccountResponse;
 import vtb.courses.stage2_task5.Response.CsiResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesRegex;
-import static vtb.courses.stage2_task5.Request.JsonSchemaUtil.validateAndParseJson;
+import static vtb.courses.stage2_task5.Request.JsonUtil.validateAndParseJson;
 
-import vtb.courses.stage2_task5.Request.JsonSchemaUtil;
+import vtb.courses.stage2_task5.Request.JsonUtil;
 
 
 @SpringBootTest
@@ -37,6 +38,8 @@ import vtb.courses.stage2_task5.Request.JsonSchemaUtil;
 class Stage2Task5ApplicationTests {
 	@Autowired
 	private CsiController csiController;
+	@Autowired
+	private AccountController accountController;
 
 	@Autowired
 	private ProductRepo productRepo;
@@ -57,7 +60,7 @@ class Stage2Task5ApplicationTests {
 	@DisplayName("Проверка контролируемости обязательных параметров")
 	public void jsonRequirableTest() throws IOException {
 		System.out.println("Проверка контролируемости обязательных параметров");
-		String wrongJson = JsonSchemaUtil.fileToString("json/csiRequest_MissedRequired.json");
+		String wrongJson = JsonUtil.fileToString("json/csiRequest_MissedRequired.json");
 		System.out.println(wrongJson);
 		ResponseEntity<CsiResponse> csiResponse = csiController.createCsi(wrongJson);
 		System.out.println(csiResponse);
@@ -70,7 +73,7 @@ class Stage2Task5ApplicationTests {
 	public void csiServiceTest() throws IOException {
 		System.out.println("Интеграционный тест сервиса создания ЭП, ПР и доп.соглашения");
 		// Получим тестовый json
-		String json = JsonSchemaUtil.fileToString("json/csiRequest.json");
+		String json = JsonUtil.fileToString("json/csiRequest.json");
 		System.out.println(json);
 
 		// Распарсим его
@@ -106,14 +109,14 @@ class Stage2Task5ApplicationTests {
 		Assertions.assertTrue(productRegisterRepo.existsByProductIdAndRegisterType(productEntity,registerTypeEntity),"Не создан продуктовый регистр нужного типа");
 
 		// Загрузим тестовый json на создание ПР
-		String accountJson = JsonSchemaUtil.fileToString("json/createAccountRequest.json");
+		String accountJson = JsonUtil.fileToString("json/createAccountRequest.json");
 
 		// Распарсим его
 		CreateAccountRequest accountRequest = validateAndParseJson(accountJson, CreateAccountRequest.getJsonSchema(), CreateAccountRequest.class);
 		ResponseEntity<CreateAccountResponse> accountResponse;
 
 		// Для начала пытаемся ещё раз создать такой же счёт,для чего вызовем метод контроллера по обработке json на создание ПР
-		accountResponse = csiController.createAccount(accountJson);
+		accountResponse = accountController.createAccount(accountJson);
 		assertThat("Не произошла проверка на существование такого же ПР", accountResponse.toString().replace('\n',' '), matchesRegex(".+Параметр registryTypeCode.+уже существует для ЭП с ИД.+"));
 		assertThat("Не сгенерилось исключение 400 BAD_REQUEST", accountResponse.toString().replace('\n',' '), matchesRegex(".+400 BAD_REQUEST.+"));
 
@@ -124,12 +127,12 @@ class Stage2Task5ApplicationTests {
 		Assertions.assertFalse(productRegisterRepo.existsByProductIdAndRegisterType(productEntity,registerTypeEntity),"Не удалось удалить созданный ПР");
 
 		// Для начала вызовем его с неверным продуктом, чтобы проверить генерацию исключения
-		accountResponse = csiController.createAccount(accountJson.replaceAll("\"instanceId\": \\d+,", "\"instanceId\": 777,"));
+		accountResponse = accountController.createAccount(accountJson.replaceAll("\"instanceId\": \\d+,", "\"instanceId\": 777,"));
 		assertThat("Не произошла проверка на существование продукта", accountResponse.toString().replace('\n',' '), matchesRegex(".+По instanceId.+не найден экземпляр продукта.+"));
 		assertThat("Не сгенерилось исключение 404 NOT_FOUND", accountResponse.toString().replace('\n',' '), matchesRegex(".+404 NOT_FOUND.+"));
 
 		// Вызовем метод контроллера по обработке json на создание ПР
-		accountResponse = csiController.createAccount(accountJson);
+		accountResponse = accountController.createAccount(accountJson);
 
 		// Проверим что контроллер вернул ПР
 		Assertions.assertNotNull(accountResponse.getBody().getData().getAccountId(), "9 Экземпляр продукта не создан");
@@ -149,7 +152,7 @@ class Stage2Task5ApplicationTests {
 
 		// Теперь к созданному ЭП создаём доп.соглашение
 		// Получим тестовый json
-		String jsonAgreement = JsonSchemaUtil.fileToString("json/csiRequestAddAgreement.json");
+		String jsonAgreement = JsonUtil.fileToString("json/csiRequestAddAgreement.json");
 
 		// Распарсим его
 		CreateCsiRequest csiAgreementRequest = validateAndParseJson(jsonAgreement, CreateCsiRequest.getJsonSchema(), CreateCsiRequest.class);
@@ -175,7 +178,7 @@ class Stage2Task5ApplicationTests {
 	public void csiServiceErrorTest() throws IOException {
 		System.out.println("Тест возникновения ошибок при работе сервиса создания ЭП");
 		// Получим тестовый json
-		String json = JsonSchemaUtil.fileToString("json/csiRequestNoProduct.json");
+		String json = JsonUtil.fileToString("json/csiRequestNoProduct.json");
 		System.out.println(json);
 		// Вызовем с ним соответствующий метод контроллера
 		ResponseEntity<CsiResponse> csiResponse = csiController.createCsi(json);

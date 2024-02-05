@@ -24,29 +24,6 @@ public class CsiService implements CsiServiceIntf{
     private ProductRegisterRepo registerRepo;
     private AccountNumServiceIntf accountNumService;
     private AgreementsRepo agreementsRepo;
-    private ProductClassRepo productClassRepo;
-    private ClientRepo clientRepo;
-    private BranchRepo branchRepo;
-
-    private TppProductEntity createProductEntity(CreateCsiRequest csiRequest) {
-        TppProductEntity pe = new TppProductEntity();
-        pe.setProductCodeId(productClassRepo.getByValue(csiRequest.getProductCode()));
-        pe.setClientId(clientRepo.getByMdmCode(csiRequest.getMdmCode()));
-        pe.setType(ProductType.valueOf(csiRequest.getProductType()));
-        pe.setNumber(csiRequest.getContractNumber());
-        pe.setPriority(csiRequest.getPriority());
-        pe.setDateOfConclusion(csiRequest.getContractDate());
-        pe.setStartDateTime(new Date());
-        pe.setPenaltyRate(BigDecimal.valueOf(csiRequest.getInterestRatePenalty()));
-        pe.setNso(BigDecimal.valueOf(csiRequest.getMinimalBalance()));
-        pe.setThresholdAmount(BigDecimal.valueOf(csiRequest.getThresholdAmount()));
-        pe.setInterestRateType(csiRequest.getRateType());
-        pe.setTaxRate(BigDecimal.valueOf(csiRequest.getTaxPercentageRate()));
-        pe.setState("OPEN");
-        pe.setCurrency(csiRequest.getIsoCurrencyCode());
-        pe.setBranch(branchRepo.getByCode(csiRequest.getBranchCode()));
-        return pe;
-    }
 
     @Transactional
     public CsiResponse createCsi(CreateCsiRequest csiRequest){
@@ -69,7 +46,7 @@ public class CsiService implements CsiServiceIntf{
             }
 
             // Создаем ЭП
-            productEntity = createProductEntity(csiRequest);
+            productEntity = ProductBuilder.createProductEntity(csiRequest);
 
             // Создаём связанные ПР
             for (TppRefProductRegisterTypeEntity registerType: registerTypes) {
@@ -134,18 +111,6 @@ public class CsiService implements CsiServiceIntf{
     @Autowired
     public void setAgreementsRepo(AgreementsRepo agreementsRepo) {
         this.agreementsRepo = agreementsRepo;
-    }
-    @Autowired
-    public void setRegistryTypeRepo(ProductClassRepo productClassRepo) {
-        this.productClassRepo = productClassRepo;
-    }
-    @Autowired
-    public void setClientRepo(ClientRepo clientRepo) {
-        this.clientRepo = clientRepo;
-    }
-    @Autowired
-    public void setBranchRepo(BranchRepo branchRepo) {
-        this.branchRepo = branchRepo;
     }
 
 }
